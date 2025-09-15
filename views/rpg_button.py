@@ -11,22 +11,22 @@ class RPGButton:
         self.hover      = False
 
     def draw(self):
-        # Define cor do botão
+        
         color = arcade.color.GRAY if not self.enabled else arcade.color.WHITE_SMOKE
 
-        # Cálculo dos limites
+        
         left   = self.center_x - self.width  / 2
         right  = self.center_x + self.width  / 2
         bottom = self.center_y - self.height / 2
         top    = self.center_y + self.height / 2
 
-        # Desenha retângulo preenchido
+        
         arcade.draw_lrbt_rectangle_filled(
             left, right, bottom, top,
             color
         )
 
-        # Texto centralizado
+        
         arcade.draw_text(
             self.label,
             self.center_x,

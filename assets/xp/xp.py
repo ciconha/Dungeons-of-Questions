@@ -28,33 +28,33 @@ class XPBar:
         self.font_size        = font_size
 
     def draw(self):
-        # Cálculo dos limites
+        
         left   = self.center_x - self.width  / 2
         right  = self.center_x + self.width  / 2
         bottom = self.center_y - self.height / 2
         top    = self.center_y + self.height / 2
 
-        # Fundo da barra
+        
         arcade.draw_lrbt_rectangle_filled(
             left, right, bottom, top,
             self.background_color
         )
 
-        # Porção preenchida (XP atual)
+        
         fill_width = (self.current_xp / self.max_xp) * self.width
         arcade.draw_lrbt_rectangle_filled(
             left, left + fill_width, bottom, top,
             self.fill_color
         )
 
-        # Borda da barra
+        
         arcade.draw_lrbt_rectangle_outline(
             left, right, bottom, top,
             self.border_color,
             border_width=2
         )
 
-        # Texto de XP abaixo
+        
         arcade.draw_text(
             f"{self.current_xp} / {self.max_xp} XP",
             left,
