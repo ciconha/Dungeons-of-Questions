@@ -5,6 +5,7 @@ from views.menu_view import MenuView
 class RPGGame(arcade.Window):
     def __init__(self):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+        # Comente esta linha para janela não-fullscreen
         self.set_fullscreen(True)
         self.show_view(MenuView())
 
@@ -18,3 +19,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
