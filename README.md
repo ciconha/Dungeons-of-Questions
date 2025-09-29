@@ -18,10 +18,6 @@ Python 3.13
 
 FastAPI
 
-Uvicorn
-
-Pydantic
-
 Arcade
 
 ``` 
