@@ -8,12 +8,12 @@ class XPBar:
         center_x:   float  = 200,
         center_y:   float  = 100,
         width:      float  = 300,
-        height:     float  =  24,
+        height:     float  = 24,
         border_color       = arcade.color.WHITE,
         fill_color         = arcade.color.GREEN,
         background_color   = arcade.color.DARK_GRAY,
         text_color         = arcade.color.WHITE,
-        font_size:  int    =  14
+        font_size:  int    = 14
     ):
         self.current_xp       = current_xp
         self.max_xp           = max_xp
@@ -28,33 +28,27 @@ class XPBar:
         self.font_size        = font_size
 
     def draw(self):
-        
         left   = self.center_x - self.width  / 2
         right  = self.center_x + self.width  / 2
         bottom = self.center_y - self.height / 2
         top    = self.center_y + self.height / 2
 
-        
         arcade.draw_lrbt_rectangle_filled(
             left, right, bottom, top,
             self.background_color
         )
 
-        
         fill_width = (self.current_xp / self.max_xp) * self.width
         arcade.draw_lrbt_rectangle_filled(
             left, left + fill_width, bottom, top,
             self.fill_color
         )
 
-        
         arcade.draw_lrbt_rectangle_outline(
             left, right, bottom, top,
-            self.border_color,
-            border_width=2
+            self.border_color, border_width=2
         )
 
-        
         arcade.draw_text(
             f"{self.current_xp} / {self.max_xp} XP",
             left,
