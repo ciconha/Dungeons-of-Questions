@@ -1,5 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
 <map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="40" height="23" tilewidth="32" tileheight="32" infinite="0" nextlayerid="2" nextobjectid="1">
- <tileset firstgid="1" name="floresta" tilewidth="32" tileheight="32" tilecount="30" columns="6"><image source="assets/maps/tilesets/tilemap_packed.png" width="192" height="176" /></tileset><layer id="1" name="Camada de Blocos 1" width="40" height="23">
+ <tileset firstgid="1" name="floresta" tilewidth="32" tileheight="32" tilecount="30" columns="6"><image source="assets/maps/tilesets/tilemap_packed.png" width="192" height="160" /></tileset><layer id="1" name="Camada de Blocos 1" width="40" height="23">
   <data encoding="csv">
 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,

@@ -1,0 +1,11 @@
+{
+  "foli": {
+    "nome": "kai",
+    "password": "123456",
+    "avatar_path": null,
+    "avatar_url": null,
+    "xp": 100,
+    "level": 1,
+    "max_xp": 100
+  }
+}
