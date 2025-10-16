@@ -132,17 +132,19 @@ class QuizView(arcade.View):
     """
     Tela de quiz para uma fase específica.
     Ganha XP ao acertar e salva no MongoDB via endpoint /api/score.
+    AGORA COM 10 XP POR ACERTO
     """
     COLORS = {
-        "background": (20, 25, 40),
-        "frame": (40, 35, 60),
-        "frame_border": (180, 160, 100),
-        "option_normal": (50, 40, 30),
-        "option_hover": (80, 60, 40),
-        "option_border": (200, 180, 120),
-        "xp_frame": (30, 35, 50),
-        "text_gold": (255, 215, 0),
-        "text_silver": (200, 200, 210)
+        "background": (30, 30, 30),  # RGB escuro conforme prompt
+        "frame": (45, 45, 45),       # Tom mais escuro para perguntas
+        "frame_border": (100, 100, 100),  # Cinza médio
+        "option_normal": (60, 60, 60),    # Botão normal
+        "option_hover": (80, 80, 80),     # Botão hover  
+        "option_border": (120, 120, 120), # Borda cinza claro
+        "text_gold": (212, 175, 55),      # Dourado conforme prompt
+        "text_silver": (230, 230, 230),   # Branco conforme prompt
+        "life_red": (220, 60, 60),        # Vermelho para vidas
+        "angel_blue": (60, 140, 220)      # Azul para anjo (futuro)
     }
 
     def __init__(self, phase: int, xp_bar: XPBar, session_id: str, parent: arcade.View):
@@ -152,8 +154,11 @@ class QuizView(arcade.View):
         self.session_id = session_id
         self.parent = parent
 
-        self.max_lives = 5
+        # Sistema de vidas e XP ATUALIZADO
+        self.max_lives = 4  # 4 tentativas conforme solicitado
         self.lives = self.max_lives
+        self.xp_per_correct = 10  # ✅ 10 XP POR ACERTO
+        
         self.questions: List[Dict] = []
         self.current = 0
         self.option_boxes: List[Dict] = []
@@ -165,10 +170,6 @@ class QuizView(arcade.View):
         self.animation = 0.0
 
         self.background = None
-        self.heart_full = None
-        self.heart_empty = None
-        self.frame_texture = None
-        self.heart_list = arcade.SpriteList()
 
         self._load_assets()
         self._setup_ui()
@@ -178,29 +179,10 @@ class QuizView(arcade.View):
             self.background = arcade.load_texture("assets/backgrounds/quiz_bg.jpg")
         except Exception:
             self.background = None
-        try:
-            self.heart_full = arcade.load_texture("assets/ui/coracao.png")
-            self.heart_empty = arcade.load_texture("assets/ui/vazio.png")
-        except Exception:
-            self.heart_full = arcade.Texture.create_filled("hf", (7, 7), arcade.color.RED)
-            self.heart_empty = arcade.Texture.create_filled("he", (7, 7), arcade.color.DARK_GRAY)
 
     def _setup_ui(self):
-        self.heart_list.clear()
-        spacing = 20
-        start_x = 40
-        y_pos = SCREEN_HEIGHT - 90
-        for i in range(self.max_lives):
-            heart = arcade.Sprite()
-            heart.texture = self.heart_full
-            heart.scale = 0.3
-            heart.center_x = start_x + i * spacing
-            heart.center_y = y_pos
-            self.heart_list.append(heart)
-        try:
-            self.frame_texture = arcade.load_texture("assets/ui/wood_frame.png")
-        except Exception:
-            self.frame_texture = None
+        """Configura a interface do usuário"""
+        pass  # Não precisa mais setup complexo
 
     def _sync_xp_to_server(self, added_xp: int):
         """
@@ -248,7 +230,11 @@ class QuizView(arcade.View):
         Volta para a view pai (mapa ou menu).
         """
         try:
-            self.parent.setup()
+            # ✅ CHAMA COMPLETAR FASE NO GAMEVIEW
+            if hasattr(self.parent, '_completar_fase'):
+                self.parent._completar_fase(self.phase)
+            else:
+                self.parent.setup()
             self.window.show_view(self.parent)
         except Exception:
             pass
@@ -257,17 +243,27 @@ class QuizView(arcade.View):
         self.option_boxes.clear()
         if not self.questions:
             return
-        w = SCREEN_WIDTH * 0.85
-        h = SCREEN_HEIGHT * 0.18
-        cx, cy = SCREEN_WIDTH/2, SCREEN_HEIGHT*0.80
+        
+        # Caixa de pergunta (80% largura, 150px altura conforme prompt)
+        w = SCREEN_WIDTH * 0.8
+        h = 150
+        cx, cy = SCREEN_WIDTH/2, SCREEN_HEIGHT - 180  # Abaixo do cabeçalho
         self.question_rect = (cx - w/2, cx + w/2, cy - h/2, cy + h/2)
-        box_h = SCREEN_HEIGHT * 0.10
-        start_y = SCREEN_HEIGHT * 0.50
-        gap = box_h + SCREEN_HEIGHT * 0.02
-        for i, text in enumerate(self.questions[self.current]["options"]):
-            y = start_y - i * gap
-            l, r = SCREEN_WIDTH * 0.12, SCREEN_WIDTH * 0.88
-            b, t = y - box_h / 2, y + box_h / 2
+        
+        # Botões de resposta (60% largura, 50px altura) - AGORA COM 3 OPÇÕES
+        box_w = SCREEN_WIDTH * 0.6
+        box_h = 50
+        start_y = SCREEN_HEIGHT * 0.45  # Ajustado para 3 opções
+        gap = box_h + 15  # 15px entre botões
+        
+        # Pega até 3 opções da pergunta
+        options = self.questions[self.current]["options"][:3]
+        
+        for i, text in enumerate(options):
+            y = start_y - (i * gap)
+            l, r = SCREEN_WIDTH * 0.2, SCREEN_WIDTH * 0.8  # Centralizado
+            b, t = y - box_h/2, y + box_h/2
+            
             self.option_boxes.append({
                 "rect": (l, r, b, t),
                 "text": text,
@@ -275,10 +271,9 @@ class QuizView(arcade.View):
                 "pulse": 0.0
             })
 
-
     def _draw_animated_background(self):
         """
-        Desenha o background (imagem ou cor sólida) animado.
+        Desenha o background (imagem ou cor sólida).
         """
         if self.background:
             arcade.draw_texture_rectangle(
@@ -294,52 +289,89 @@ class QuizView(arcade.View):
                 self.COLORS["background"]
             )
 
-
-    def _draw_xp_bar_container(self):
+    def _draw_life_bar(self):
         """
-        Desenha o contêiner da barra de XP no top da tela.
+        Desenha a barra de vidas com círculos vermelhos.
+        Cada erro remove um círculo da direita para a esquerda.
         """
-        left, right = 20, SCREEN_WIDTH - 20
-        bottom, top = SCREEN_HEIGHT - 60, SCREEN_HEIGHT - 20
-        arcade.draw_lrbt_rectangle_filled(
-            left, right, bottom, top,
-            self.COLORS["xp_frame"]
-        )
-        arcade.draw_lrbt_rectangle_outline(
-            left + 2, right - 2, bottom + 2, top - 2,
-            self.COLORS["frame_border"],
-            border_width=3
-        )
-
-
-    def _draw_hearts_with_effects(self):
-        """
-        Desenha corações de vidas com efeitos de pulsar e cor.
-        """
-        for idx, heart in enumerate(self.heart_list):
-            heart.texture = (
-                self.heart_full
-                if idx < self.lives
-                else self.heart_empty
-            )
-            # efeito de pulsar quando pouca vida
-            if self.lives <= 2 and idx < self.lives:
-                pulse = math.sin(self.animation * 10) * 0.10 + 1.0
-                heart.scale = 0.35 * pulse
-                if idx == self.lives - 1:
-                    glow = math.sin(self.animation * 12) * 0.1 + 0.9
-                    heart.color = (255, 255, int(200 * glow))
+        bar_width = 200
+        bar_height = 60
+        bar_x = SCREEN_WIDTH - bar_width - 20  # Topo direito
+        bar_y = SCREEN_HEIGHT - 50
+        
+        # Desenha os círculos de vida
+        circle_radius = 25
+        circle_spacing = 10
+        start_x = bar_x + circle_radius
+        
+        for i in range(self.max_lives):
+            x = start_x + (i * (circle_radius * 2 + circle_spacing))
+            y = bar_y
+            
+            # Círculo de fundo (vazio)
+            arcade.draw_circle_filled(x, y, circle_radius, (80, 80, 80))
+            arcade.draw_circle_outline(x, y, circle_radius, (120, 120, 120), 3)
+            
+            # Se tiver vida, preenche com vermelho
+            if i < self.lives:
+                # Efeito de pulsar na última vida
+                if self.lives <= 2 and i == self.lives - 1:
+                    pulse = math.sin(self.animation * 10) * 0.1 + 1.0
+                    current_radius = circle_radius * pulse
+                    arcade.draw_circle_filled(x, y, current_radius, self.COLORS["life_red"])
                 else:
-                    heart.color = (255, 255, 255)
-            else:
-                heart.scale = 0.3
-                heart.color = (255, 255, 255)
+                    arcade.draw_circle_filled(x, y, circle_radius, self.COLORS["life_red"])
+                
+                # Borda do círculo preenchido
+                arcade.draw_circle_outline(x, y, circle_radius, (255, 100, 100), 2)
 
-            offset = math.sin(self.animation * 4 + idx) * 0.8
-            heart.center_y = (SCREEN_HEIGHT - 20) + offset
-
-        self.heart_list.draw()
-
+    def _draw_xp_bar_at_top(self):
+        """
+        Desenha a barra de XP no topo esquerdo, completinha.
+        """
+        if not self.xp_bar:
+            return
+            
+        bar_width = 200
+        bar_height = 20
+        bar_x = 20  # Topo esquerdo
+        bar_y = SCREEN_HEIGHT - 40
+        
+        # Fundo da barra - CORRIGIDO
+        arcade.draw_lrbt_rectangle_filled(
+            bar_x, bar_x + bar_width,
+            bar_y - bar_height/2, bar_y + bar_height/2,
+            (50, 50, 50)
+        )
+        
+        # Preenchimento da barra (XP atual)
+        current_xp = self.xp_bar.current_xp
+        max_xp = self.xp_bar.max_xp
+        fill_width = (current_xp / max_xp) * bar_width if max_xp > 0 else 0
+        
+        if fill_width > 0:
+            arcade.draw_lrbt_rectangle_filled(
+                bar_x, bar_x + fill_width,
+                bar_y - bar_height/2, bar_y + bar_height/2,
+                (100, 200, 255)  # Azul para XP
+            )
+        
+        # Borda da barra - CORRIGIDO
+        arcade.draw_lrbt_rectangle_outline(
+            bar_x, bar_x + bar_width,
+            bar_y - bar_height/2, bar_y + bar_height/2,
+            (150, 150, 150),
+            2
+        )
+        
+        # Texto XP
+        arcade.draw_text(
+            f"XP: {current_xp}/{max_xp}",
+            bar_x,
+            bar_y + bar_height + 5,
+            self.COLORS["text_silver"],
+            14
+        )
 
     def _draw_phase_banner(self):
         """
@@ -352,14 +384,12 @@ class QuizView(arcade.View):
             self.COLORS["text_gold"],
             font_size=26,
             anchor_x="center",
-            font_name="Arial",
             bold=True
         )
 
-
     def _draw_question_frame(self):
         """
-        Desenha o quadro que envolve o texto da pergunta.
+        Desenha a caixa de pergunta conforme prompt.
         """
         if not self.questions:
             return
@@ -367,140 +397,130 @@ class QuizView(arcade.View):
         l, r, b, t = self.question_rect
         cx, cy = (l + r) / 2, (b + t) / 2
 
-        if self.frame_texture:
-            try:
-                arcade.draw_texture_rectangle(cx, cy, r - l, t - b, self.frame_texture)
-            except Exception:
-                # fallback gráfico
-                arcade.draw_lrbt_rectangle_filled(l, r, b, t, self.COLORS["frame"])
-                arcade.draw_lrbt_rectangle_outline(
-                    l + 4, r - 4, b + 4, t - 4,
-                    self.COLORS["frame_border"], border_width=2
-                )
-        else:
-            arcade.draw_lrbt_rectangle_filled(l, r, b, t, self.COLORS["frame"])
-            arcade.draw_lrbt_rectangle_outline(
-                l + 4, r - 4, b + 4, t - 4,
-                self.COLORS["frame_border"], border_width=2
-            )
-
-        question = self.questions[self.current].get("question", "")
-        arcade.draw_text(
-            f"§ {question} §",
-            cx, cy + 5,
-            self.COLORS["text_gold"],
-            font_size=22,
-            width=int(r - l) - 50,
-            align="center",
-            anchor_x="center",
-            anchor_y="center",
-            font_name="Arial",
-            bold=True
+        # Caixa de fundo
+        arcade.draw_lrbt_rectangle_filled(l, r, b, t, self.COLORS["frame"])
+        
+        # Borda
+        arcade.draw_lrbt_rectangle_outline(
+            l, r, b, t,
+            self.COLORS["frame_border"],
+            border_width=4
         )
 
+        # Texto da pergunta
+        question = self.questions[self.current].get("question", "")
+        arcade.draw_text(
+            question,
+            cx, cy,
+            self.COLORS["text_silver"],
+            font_size=18,
+            width=int(r - l) - 40,
+            align="center",
+            anchor_x="center",
+            anchor_y="center"
+        )
 
     def _draw_options_with_effects(self):
         """
-        Desenha cada opção, com borda, cor e pulso.
+        Desenha botões de opção conforme prompt.
         """
         if not self.questions:
             return
 
         for idx, box in enumerate(self.option_boxes):
             l, r, b, t = box["rect"]
+            cx, cy = (l + r) / 2, (b + t) / 2
+            width = r - l
+            height = t - b
+
+            # Cor baseada no hover
             if box["hover"]:
                 color = self.COLORS["option_hover"]
                 border = arcade.color.GOLD
-                box["pulse"] = min(box["pulse"] + 0.1, 0.3)
             else:
                 color = self.COLORS["option_normal"]
                 border = self.COLORS["option_border"]
-                box["pulse"] = max(box["pulse"] - 0.05, 0.0)
 
-            pulse = math.sin(self.animation * 8) * box["pulse"]
-            cw = (r - l) + pulse * 10
-            ch = (t - b) + pulse * 5
-            cx, cy = (l + r) / 2, (b + t) / 2
-            adj_l, adj_r = cx - cw / 2, cx + cw / 2
-            adj_b, adj_t = cy - ch / 2, cy + ch / 2
+            # Botão - CORRIGIDO
+            arcade.draw_lrbt_rectangle_filled(l, r, b, t, color)
+            arcade.draw_lrbt_rectangle_outline(l, r, b, t, border, 2)
 
-            arcade.draw_lrbt_rectangle_filled(adj_l, adj_r, adj_b, adj_t, color)
-            arcade.draw_lrbt_rectangle_outline(adj_l, adj_r, adj_b, adj_t, border, border_width=3 + int(pulse * 2))
-
-            # número da opção
+            # Texto da opção com número (1, 2, 3)
+            option_number = f"{idx + 1}. "
+            full_text = option_number + box["text"]
+            
             arcade.draw_text(
-                f"〔{idx+1}〕",
-                l + 25, cy,
-                self.COLORS["text_gold"],
-                font_size=18,
-                anchor_y="center",
-                font_name="Arial",
-                bold=True
+                full_text,
+                cx, cy,
+                self.COLORS["text_silver"],
+                font_size=16,
+                width=int(width) - 40,
+                align="center",
+                anchor_x="center",
+                anchor_y="center"
             )
-            # texto da opção
-            arcade.draw_text(
-                box["text"],
-                l + 70, cy,
-                arcade.color.WHITE,
-                font_size=17,
-                width=int(r - l) - 90,
-                anchor_y="center",
-                font_name="Arial"
-            )
-
 
     def _draw_progress_indicator(self):
         """
-        Mostra progresso Qtd Respondidas / Total.
+        Mostra progresso.
         """
         if not self.questions:
             return
 
         arcade.draw_text(
-            f"⦿ {self.current + 1} / {len(self.questions)} ⦿",
-            SCREEN_WIDTH - 60, 35,
+            f"{self.current + 1} / {len(self.questions)}",
+            SCREEN_WIDTH - 60, SCREEN_HEIGHT - 40,
             self.COLORS["text_silver"],
             font_size=16,
-            anchor_x="center",
-            font_name="Arial"
+            anchor_x="center"
         )
 
-
-    def _draw_message(self, msg: str):
+    def _draw_header(self):
         """
-        Mensagens centrais de status (ex: aguardando ou sem perguntas).
+        Cabeçalho 'Pergunta' conforme prompt.
         """
         arcade.draw_text(
-            msg,
+            "Pergunta",
             SCREEN_WIDTH / 2,
-            SCREEN_HEIGHT / 2,
-            arcade.color.WHITE,
-            font_size=26,
+            SCREEN_HEIGHT - 60,
+            self.COLORS["text_gold"],
+            font_size=24,
             anchor_x="center",
-            anchor_y="center",
-            font_name="Arial"
+            font_name="serif"
         )
-
 
     def on_draw(self):
         self.clear()
         self._draw_animated_background()
-        self._draw_xp_bar_container()
-        self.xp_bar.draw()
-        self._draw_hearts_with_effects()
-        self._draw_phase_banner()
-
+        
+        # Header
+        self._draw_header()
+        
+        # Elementos principais
         if not self.questions:
-            self._draw_message("Buscando perguntas...")
+            arcade.draw_text(
+                "Carregando perguntas...",
+                SCREEN_WIDTH / 2,
+                SCREEN_HEIGHT / 2,
+                arcade.color.WHITE,
+                24,
+                anchor_x="center",
+                anchor_y="center"
+            )
         else:
             self._draw_question_frame()
             self._draw_options_with_effects()
             self._draw_progress_indicator()
 
+        # UI fixa - NOVA POSIÇÃO
+        self._draw_xp_bar_at_top()  # Barra de XP no topo esquerdo
+        self._draw_life_bar()       # Barra de vidas no topo direito
+        self._draw_phase_banner()   # Banner da fase
+
+        # Efeitos
         self.particle_system.draw()
         for ft in list(self.floating_texts):
             ft.draw()
-
 
     def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
         """
@@ -508,6 +528,9 @@ class QuizView(arcade.View):
         """
         self.mouse_x, self.mouse_y = x, y
 
+        for box in self.option_boxes:
+            l, r, b, t = box["rect"]
+            box["hover"] = (l < x < r and b < y < t)
 
     def on_update(self, dt: float):
         """
@@ -517,15 +540,9 @@ class QuizView(arcade.View):
         self.particle_system.update(dt)
         self.floating_texts[:] = [ft for ft in self.floating_texts if ft.update(dt)]
 
-        for box in self.option_boxes:
-            l, r, b, t = box["rect"]
-            box["hover"] = (l < self.mouse_x < r and b < self.mouse_y < t)
-
-
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
         """
-        Trata clique em opção: acerto => ganha XP, erro => perde vida.
-        No fim retorna ao mapa.
+        Trata clique em opção: acerto => ganha 10 XP, erro => perde vida.
         """
         if not self.questions or self.lives <= 0:
             return
@@ -539,11 +556,15 @@ class QuizView(arcade.View):
             if l < x < r and b < y < t:
                 hit = (box["text"] == correct_answer)
                 if hit:
-                    self.xp_bar.add_xp(15)
-                    self._sync_xp_to_server(15)
+                    # ✅ ACERTOU - GANHA 10 XP
+                    xp_ganho = self.xp_per_correct
+                    if self.xp_bar:
+                        self.xp_bar.add_xp(xp_ganho)
+                    self._sync_xp_to_server(xp_ganho)
+                    
                     self.floating_texts.append(
                         FloatingText(
-                            "★ +15 XP! ★",
+                            f"★ +{xp_ganho} XP! ★",
                             SCREEN_WIDTH / 2,
                             SCREEN_HEIGHT * 0.25,
                             (80, 200, 120),
@@ -552,6 +573,7 @@ class QuizView(arcade.View):
                     )
                     self.particle_system.create_effect(x, y, (0, 255, 100))
                 else:
+                    # ❌ ERROU - PERDE VIDA
                     self.lives = max(0, self.lives - 1)
                     self.floating_texts.append(
                         FloatingText(
@@ -572,7 +594,6 @@ class QuizView(arcade.View):
                     self._build_option_boxes()
                 break
 
-
     def _delayed_return(self, dt: float):
         """
         Aguarda animação e retorna à view pai.
@@ -580,17 +601,16 @@ class QuizView(arcade.View):
         arcade.unschedule(self._delayed_return)
         self._return_to_map()
 
-
     def on_key_press(self, key: int, modifiers: int):
         """
-        Suporta ESC para sair e teclas 1–4 para respostas.
+        Suporta ESC para sair e teclas 1–3 para respostas.
         """
         if key == arcade.key.ESCAPE:
             self._return_to_map()
             return
 
-        # Teclas 1–4 replicam clique
-        if arcade.key.KEY_1 <= key <= arcade.key.KEY_4:
+        # Teclas 1–3 para selecionar opções (agora 3 opções)
+        if arcade.key.KEY_1 <= key <= arcade.key.KEY_3:
             idx = key - arcade.key.KEY_1
             if idx < len(self.option_boxes):
                 l, r, b, t = self.option_boxes[idx]["rect"]
@@ -598,10 +618,11 @@ class QuizView(arcade.View):
                 self.on_mouse_press(cx, cy, arcade.MOUSE_BUTTON_LEFT, modifiers)
             return
 
-        # ENTER/RETURN
+        # ENTER/RETURN para opção hover
         if key in (arcade.key.ENTER, arcade.key.RETURN):
             for box in self.option_boxes:
-                l, r, b, t = box["rect"]
-                if l < self.mouse_x < r and b < self.mouse_y < t:
-                    self.on_mouse_press(self.mouse_x, self.mouse_y, arcade.MOUSE_BUTTON_LEFT, modifiers)
+                if box["hover"]:
+                    l, r, b, t = box["rect"]
+                    cx, cy = (l + r) / 2, (b + t) / 2
+                    self.on_mouse_press(cx, cy, arcade.MOUSE_BUTTON_LEFT, modifiers)
                     break

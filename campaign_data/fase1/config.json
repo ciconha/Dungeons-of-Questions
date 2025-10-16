@@ -1,0 +1,31 @@
+{
+  "fases": [
+    {
+      "id": 1,
+      "nome": "Floresta do Início",
+      "pos": [150, 400],
+      "quiz": "quiz_1.json",
+      "conectado_a": [2],
+      "desbloqueada": true,
+      "concluida": false
+    },
+    {
+      "id": 2,
+      "nome": "Caverna do Saber", 
+      "pos": [300, 350],
+      "quiz": "quiz_2.json",
+      "conectado_a": [1, 3],
+      "desbloqueada": false,
+      "concluida": false
+    },
+    {
+      "id": 3,
+      "nome": "Montanha do Desafio",
+      "pos": [450, 300],
+      "quiz": "quiz_3.json",
+      "conectado_a": [2],
+      "desbloqueada": false,
+      "concluida": false
+    }
+  ]
+}

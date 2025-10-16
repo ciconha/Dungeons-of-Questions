@@ -91,14 +91,22 @@ class SimpleAuth:
             print(f"❌ Erro ao baixar avatar: {e}")
             return None
     
-    def register_user(self, username: str, password: str, nome: str, avatar_url: str = None) -> bool:
-        """Registra novo usuário com URL do avatar"""
+    def register_user(self, username: str, password: str, nome: str, avatar_url: str = None, character_data: dict = None) -> bool:
+        """Registra novo usuário com URL do avatar e dados do personagem"""
         if self.user_exists(username):
             return False
         
         avatar_path = None
         if avatar_url and self.is_valid_url(avatar_url):
             avatar_path = self.download_avatar(avatar_url, username)
+        
+        # Dados padrão do personagem se não for fornecido
+        if not character_data:
+            character_data = {
+                "name": "Emily",
+                "sprite": "assets/ui/Emilly.png",
+                "game_sprite": "assets/characters/Emillywhite.png"  # Usando o caminho que você forneceu
+            }
         
         self.users[username] = {
             "nome": nome,
@@ -107,7 +115,19 @@ class SimpleAuth:
             "avatar_url": avatar_url,
             "xp": 0,
             "level": 1,
-            "max_xp": 100  # XP máxima inicial
+            "max_xp": 100,  # XP máxima inicial
+            "character": character_data,  # Salva dados do personagem escolhido
+            "campaign_progress": {
+                "fase_atual": 1,
+                "fases": {
+                    1: "liberada",
+                    2: "bloqueada", 
+                    3: "bloqueada",
+                    4: "bloqueada",
+                    5: "bloqueada",
+                    6: "bloqueada"
+                }
+            }
         }
         self.save_users()
         return True
@@ -139,6 +159,15 @@ class SimpleAuth:
             self.users[actual_username]["level"] = level
             # Atualiza XP máxima baseada no nível
             self.users[actual_username]["max_xp"] = self._calculate_max_xp(level)
+            self.save_users()
+            return True
+        return False
+    
+    def update_user_character(self, username: str, character_data: dict):
+        """Atualiza o personagem do usuário"""
+        actual_username = next((u for u in self.users.keys() if u.lower() == username.lower()), None)
+        if actual_username:
+            self.users[actual_username]["character"] = character_data
             self.save_users()
             return True
         return False

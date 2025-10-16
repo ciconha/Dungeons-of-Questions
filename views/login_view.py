@@ -6,27 +6,230 @@ import tkinter as tk
 from tkinter import filedialog
 from typing import Dict, List
 
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, MENU_BACKGROUND, BUTTON_FONT
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, MENU_BACKGROUND, BUTTON_FONT, get_avatar_by_username, LOGIN_BACKGROUND, LOGIN_MUSIC
 from views.rpg_button import RPGButton
 from views.menu_view import MenuView
-from auth.simple_auth import auth_system  # Importa o sistema de autenticação
-from auth.user_manager import user_manager  # Importa o gerenciador de usuários
+from auth.simple_auth import auth_system
+from auth.user_manager import user_manager
+
+
+class CharacterSelectionView(arcade.View):
+    """Tela de seleção de personagem após o cadastro"""
+    
+    def __init__(self, username: str, nome: str, senha: str, avatar_path: str = None):
+        super().__init__()
+        self.username = username
+        self.nome = nome
+        self.senha = senha
+        self.avatar_path = avatar_path
+        
+        # Lista de personagens disponíveis
+        self.characters = [
+            {
+                "name": "Emily",
+                "sprite": "assets/ui/Emilly.png",
+                "game_sprite": "assets/characters/Emillywhite.png",  # Sprite para o jogo
+                "description": "Aventureira corajosa com poderes mágicos"
+            },
+        ]
+        
+        self.selected_character_index = 0
+        self.character_texture = None
+        self.character_sprite_list = arcade.SpriteList()
+        
+        self._load_character_texture()
+        
+        # Botões
+        self.buttons = [
+            RPGButton("SELECIONAR", SCREEN_WIDTH/10, 150, width=200, height=50),
+            RPGButton("VOLTAR", SCREEN_WIDTH/10, 80, width=200, height=50)
+        ]
+
+    def _load_character_texture(self):
+        """Carrega a textura do personagem selecionado"""
+        if self.characters:
+            char = self.characters[self.selected_character_index]
+            try:
+                self.character_texture = arcade.load_texture(char["sprite"])
+            except:
+                self.character_texture = None
+
+    def on_draw(self):
+        self.clear()
+        
+        # Fundo
+        arcade.draw_lrbt_rectangle_filled(
+            0, SCREEN_WIDTH, 0, SCREEN_HEIGHT,
+            (20, 15, 35)  # Roxo escuro
+        )
+        
+        # Título
+        arcade.draw_text(
+            "ESCOLHA SEU PERSONAGEM",
+            SCREEN_WIDTH, SCREEN_HEIGHT - 100,
+            arcade.color.GOLD, 32,
+            anchor_x="center", font_name=BUTTON_FONT, bold=True
+        )
+        
+        # Personagem selecionado
+        if self.characters:
+            char = self.characters[self.selected_character_index]
+            
+            # Área do personagem
+            arcade.draw_lrbt_rectangle_filled(
+                SCREEN_WIDTH/2 - 200, SCREEN_WIDTH/2 ,
+                SCREEN_HEIGHT/2 - 100, SCREEN_HEIGHT/2,
+                (40, 35, 60, 200)
+            )
+            
+            # Sprite do personagem
+            if self.character_texture:
+                self.character_sprite_list.clear()
+                sprite = arcade.Sprite()
+                sprite.texture = self.character_texture
+                sprite.center_x = SCREEN_WIDTH/2
+                sprite.center_y = SCREEN_HEIGHT/2 
+                sprite.scale = 0.5
+                self.character_sprite_list.append(sprite)
+                self.character_sprite_list.draw()
+            else:
+                arcade.draw_text(
+                    "🎮", SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 50,
+                    arcade.color.WHITE, 64,
+                    anchor_x="center", anchor_y="center"
+                )
+            
+            # Nome e descrição
+            arcade.draw_text(
+                char["name"],
+                SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 30,
+                arcade.color.GOLD, 28,
+                anchor_x="left", bold=True
+            )
+            
+            arcade.draw_text(
+                char["description"],
+                SCREEN_WIDTH, SCREEN_HEIGHT/2,
+                arcade.color.LIGHT_GRAY, 16,
+                anchor_x="left", width=250, align="left"
+            )
+        
+        # Controles de navegação
+        arcade.draw_text(
+            "← A / D → : Navegar entre personagens",
+            SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 120,
+            arcade.color.LIGHT_BLUE, 14,
+            anchor_x="center"
+        )
+        
+        # Botões
+        for btn in self.buttons:
+            btn.draw()
+
+    def on_key_press(self, key, modifiers):
+        # Navegação entre personagens
+        if key == arcade.key.LEFT or key == arcade.key.A:
+            self.selected_character_index = (self.selected_character_index - 1) % len(self.characters)
+            self._load_character_texture()
+        elif key == arcade.key.RIGHT or key == arcade.key.D:
+            self.selected_character_index = (self.selected_character_index + 1) % len(self.characters)
+            self._load_character_texture()
+        elif key == arcade.key.ENTER:
+            self._select_character()
+        elif key == arcade.key.ESCAPE:
+            self._go_back()
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        # Botões
+        for btn in self.buttons:
+            if btn.check_click(x, y):
+                if btn.label == "SELECIONAR":
+                    self._select_character()
+                elif btn.label == "VOLTAR":
+                    self._go_back()
+
+    def _select_character(self):
+        """Seleciona o personagem e cria a conta"""
+        if self.characters:
+            selected_char = self.characters[self.selected_character_index]
+            
+            # Cria a conta com o personagem selecionado
+            if auth_system.register_user(
+                self.username, 
+                self.senha, 
+                self.nome, 
+                avatar_url=self.avatar_path,
+                character_data=selected_char  # Salva dados do personagem
+            ):
+                print(f"✅ Conta criada com personagem: {selected_char['name']}")
+                
+                # Define o usuário atual
+                user_manager.set_current_user(self.username)
+                
+                # Vai para o menu
+                menu_view = MenuView(
+                    username=self.username,
+                    avatar_path=self.avatar_path
+                )
+                self.window.show_view(menu_view)
+            else:
+                print("❌ Erro ao criar conta com personagem")
+
+    def _go_back(self):
+        """Volta para o cadastro"""
+        from views.login_view import LoginView
+        login_view = LoginView()
+        self.window.show_view(login_view)
 
 
 class LoginView(arcade.View):
     """
-    Tela de login e cadastro com formulários de texto
-    e seletor de avatar via file dialog do tkinter.
+    Tela de login e cadastro com seleção de personagem
     """
 
     def __init__(self):
         super().__init__()
 
         # Background
+        self.background = arcade.SpriteList()
         try:
-            self.bg_texture = arcade.load_texture(MENU_BACKGROUND)
-        except Exception:
-            self.bg_texture = None
+            if os.path.exists(LOGIN_BACKGROUND):
+                bg = arcade.Sprite(LOGIN_BACKGROUND, scale=1.0)
+                bg.center_x = SCREEN_WIDTH / 2
+                bg.center_y = SCREEN_HEIGHT / 2
+                bg.width = SCREEN_WIDTH
+                bg.height = SCREEN_HEIGHT
+                self.background.append(bg)
+                print(f"✅ Background carregado: {LOGIN_BACKGROUND}")
+            else:
+                print(f"❌ Background não encontrado: {LOGIN_BACKGROUND}")
+                if os.path.exists(MENU_BACKGROUND):
+                    bg = arcade.Sprite(MENU_BACKGROUND, scale=1.0)
+                    bg.center_x = SCREEN_WIDTH / 2
+                    bg.center_y = SCREEN_HEIGHT / 2
+                    bg.width = SCREEN_WIDTH
+                    bg.height = SCREEN_HEIGHT
+                    self.background.append(bg)
+                    print(f"✅ Usando fallback: {MENU_BACKGROUND}")
+        except Exception as e:
+            print(f"❌ Erro ao carregar background: {e}")
+            pass
+
+        # Áudio de fundo
+        self.background_music = None
+        self.music_player = None
+        try:
+            if os.path.exists(LOGIN_MUSIC):
+                self.background_music = arcade.Sound(LOGIN_MUSIC)
+                self.music_player = self.background_music.play(volume=0.5)
+                self.background_music.set_volume(0.5, self.music_player)
+                self.background_music.set_loop(True, self.music_player)
+                print("🎵 Áudio de fundo iniciado: specular_city.mp3")
+            else:
+                print(f"❌ Áudio não encontrado: {LOGIN_MUSIC}")
+        except Exception as e:
+            print(f"❌ Erro ao carregar áudio de fundo: {e}")
+            self.background_music = None
 
         # Estado: "login" ou "cadastro"
         self.current_form = "login"
@@ -49,6 +252,11 @@ class LoginView(arcade.View):
         # Inicializa UI
         self._setup_text_entries()
         self._setup_ui()
+
+    def on_hide_view(self):
+        """Para a música quando a view é trocada"""
+        if self.background_music and self.music_player:
+            self.background_music.stop(self.music_player)
 
     def set_status(self, message: str, duration: float = 3.0):
         """Define mensagem de status temporária"""
@@ -119,7 +327,7 @@ class LoginView(arcade.View):
         cy = SCREEN_HEIGHT / 2
         self.buttons = [
             RPGButton("ENTRAR", cx, cy - 80),
-            RPGButton("CRIAR CONTA", cx, cy - 140),
+            RPGButton("CRIAR CONTA", cx, cy - 180),
         ]
 
     def update_field_visibility(self):
@@ -163,7 +371,7 @@ class LoginView(arcade.View):
         return True
 
     def fazer_login(self):
-        """Lógica de login - SÓ ENTRA SE USUÁRIO EXISTIR"""
+        """Lógica de login"""
         if not self.validar_campos_login():
             return
 
@@ -172,32 +380,33 @@ class LoginView(arcade.View):
         
         self.set_status("🔐 Verificando credenciais...")
         
-        # Usa o SimpleAuth para validar - SÓ CONTINUA SE O LOGIN FOR BEM-SUCEDIDO
         if auth_system.authenticate(usuario, senha):
-            # Login bem-sucedido - vai para o menu
             self.set_status("✅ Login realizado com sucesso!")
             print(f"✅ Login bem-sucedido! Usuário: {usuario}")
             
-            # CORREÇÃO: Define o usuário atual no UserManager
             user_manager.set_current_user(usuario)
             
-            # Obtém dados do usuário para passar para o menu
             user_data = auth_system.get_user_data(usuario)
             avatar_path = user_data.get("avatar_path") if user_data else None
             
-            # CORREÇÃO: Remove o parâmetro 'token' que não existe no MenuView
+            if not avatar_path:
+                avatar_path = get_avatar_by_username(usuario)
+                print(f"🎨 Avatar automático atribuído: {avatar_path}")
+            
+            if self.background_music and self.music_player:
+                self.background_music.stop(self.music_player)
+            
             menu_view = MenuView(
                 username=usuario,
                 avatar_path=avatar_path
             )
             self.window.show_view(menu_view)
         else:
-            # Login falhou - NÃO AVANÇA, fica na tela de login
             self.set_status("❌ Usuário ou senha incorretos")
             print("❌ Login falhou - usuário não existe ou credenciais inválidas")
 
     def criar_conta(self):
-        """Lógica de criação de conta"""
+        """Lógica de criação de conta - agora vai para seleção de personagem"""
         if not self.validar_campos_cadastro():
             return
 
@@ -207,25 +416,28 @@ class LoginView(arcade.View):
         
         self.set_status("📝 Criando conta...")
         
-        # Usa o SimpleAuth para criar conta
-        if auth_system.register_user(usuario, senha, nome, avatar_url=self.avatar_path):
-            # Cadastro bem-sucedido - faz login automático
-            self.set_status("✅ Conta criada com sucesso!")
-            print(f"✅ Conta criada! Usuário: {usuario}")
-            
-            # CORREÇÃO: Define o usuário atual no UserManager
-            user_manager.set_current_user(usuario)
-            
-            # CORREÇÃO: Remove o parâmetro 'token' que não existe no MenuView
-            menu_view = MenuView(
-                username=usuario,
-                avatar_path=self.avatar_path
-            )
-            self.window.show_view(menu_view)
-        else:
-            # Cadastro falhou
+        # CORREÇÃO: Usa avatar automático baseado no username
+        avatar_to_use = self.avatar_path if self.avatar_path else get_avatar_by_username(usuario)
+        
+        print(f"🎨 Avatar para nova conta: {avatar_to_use}")
+        
+        # Verifica se o usuário já existe
+        if auth_system.user_exists(usuario):
             self.set_status("❌ Usuário já existe")
-            print("❌ Cadastro falhou - usuário já existe")
+            return
+        
+        # Para a música antes de trocar de view
+        if self.background_music and self.music_player:
+            self.background_music.stop(self.music_player)
+        
+        # Vai para a tela de seleção de personagem
+        character_view = CharacterSelectionView(
+            username=usuario,
+            nome=nome,
+            senha=senha,
+            avatar_path=avatar_to_use
+        )
+        self.window.show_view(character_view)
 
     def draw_login_form(self):
         """Desenha título, campos e labels do login."""
@@ -294,12 +506,10 @@ class LoginView(arcade.View):
 
         # Avatar preview
         ax, ay = SCREEN_WIDTH/2, SCREEN_HEIGHT - 200
-        arcade.draw_circle_filled(ax, ay, 50, (60, 60, 80))
         if self.avatar_texture:
             try:
                 arcade.draw_texture_rectangle(ax, ay, 90, 90, self.avatar_texture)
             except:
-                # Fallback se der erro
                 arcade.draw_text(
                     "🎮", ax, ay,
                     arcade.color.WHITE, 24,
@@ -329,6 +539,14 @@ class LoginView(arcade.View):
             "ESCOLHER AVATAR",
             SCREEN_WIDTH/2, SCREEN_HEIGHT - 250,
             arcade.color.WHITE, 12,
+            anchor_x="center", anchor_y="center"
+        )
+
+        # Instrução do avatar automático
+        arcade.draw_text(
+            "Ou deixe em branco para um avatar automático de anime!",
+            SCREEN_WIDTH/2, SCREEN_HEIGHT - 290,
+            arcade.color.LIGHT_GRAY, 10,
             anchor_x="center", anchor_y="center"
         )
 
@@ -396,19 +614,8 @@ class LoginView(arcade.View):
         self.clear()
 
         # Fundo
-        if self.bg_texture:
-            try:
-                arcade.draw_texture_rectangle(
-                    SCREEN_WIDTH/2, SCREEN_HEIGHT/2,
-                    SCREEN_WIDTH, SCREEN_HEIGHT,
-                    self.bg_texture
-                )
-            except:
-                # Fallback se der erro
-                arcade.draw_lrbt_rectangle_filled(
-                    0, SCREEN_WIDTH, 0, SCREEN_HEIGHT,
-                    arcade.color.DARK_SLATE_GRAY
-                )
+        if self.background:
+            self.background.draw()
         else:
             arcade.draw_lrbt_rectangle_filled(
                 0, SCREEN_WIDTH, 0, SCREEN_HEIGHT,
@@ -506,6 +713,9 @@ class LoginView(arcade.View):
                     elif btn.label == "CRIAR CONTA":
                         self.current_form = "cadastro"
                         self.active_field = None
+                        # Reseta o avatar quando vai para cadastro
+                        self.avatar_path = None
+                        self.avatar_texture = None
 
     def on_key_press(self, key: int, modifiers: int):
         # ESC
@@ -513,7 +723,13 @@ class LoginView(arcade.View):
             if self.current_form == "cadastro":
                 self.current_form = "login"
                 self.active_field = None
+                # Reseta o avatar quando volta para login
+                self.avatar_path = None
+                self.avatar_texture = None
             else:
+                # Para a música antes de sair
+                if self.background_music and self.music_player:
+                    self.background_music.stop(self.music_player)
                 arcade.exit()
             return
 
