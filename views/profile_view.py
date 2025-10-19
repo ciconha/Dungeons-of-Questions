@@ -1,6 +1,7 @@
 import arcade
 from auth.simple_auth import auth_system
 from auth.user_manager import user_manager
+from views.multiplayer_view import MultiplayerView 
 
 class ProfileView(arcade.View):
     def __init__(self, menu_view=None):
@@ -20,46 +21,59 @@ class ProfileView(arcade.View):
         self.character_sprite_list = arcade.SpriteList()
         self.avatar_sprite_list = arcade.SpriteList()
         
-        # Componentes de UI
+        # Componentes de UI - REMOVIDO "DESAFIOS"
         self.active_tab = 0
-        self.tabs = ["PERSONAGEM", "EQUIPAMENTOS", "DESAFIOS", "CONQUISTAS"]
+        self.tabs = ["PERSONAGEM", "EQUIPAMENTOS", "MULTIPLAYER", "CONQUISTAS"]
         
-        # Dados do personagem (simulados)
+        # Dados do personagem (atualizados conforme imagem)
         self.personagem_data = {
-            "vida": 850,
-            "vida_maxima": 1000,
-            "mana": 420,
-            "mana_maxima": 500,
+            "vida": 3264,
+            "vida_maxima": 9264,
+            "mana": 1920,
+            "mana_maxima": 2600,
             "atributos": {
-                "forca": 85,
-                "velocidade": 72,
-                "defesa": 63,
-                "magia": 91,
-                "agilidade": 78
+                "ataque_fisico": 2647,
+                "ataque_magico": 2647,
+                "defesa_fisica": 2647,
+                "defesa_magica": 2647,
+                "precisao": 130,
+                "velocidade_ataque": 1.63
             }
         }
         
-        # Dados de desafios (simulados)
-        self.desafios = [
-            {"titulo": "Mestre dos Quiz", "progresso": 1, "total": 2, "concluido": False},
-            {"titulo": "Explorador Incansável", "progresso": 3, "total": 5, "concluido": False},
-            {"titulo": "Colecionador de Relíquias", "progresso": 7, "total": 10, "concluido": False}
-        ]
-        
-        # Dados de equipamentos (simulados)
+        # Dados de equipamentos (atualizados)
         self.equipamentos = [
-            {"nome": "Espada Longa", "tipo": "arma", "equipado": True, "icone": "⚔️"},
-            {"nome": "Armadura de Couro", "tipo": "armadura", "equipado": True, "icone": "🛡️"},
-            {"nome": "Poção de Cura", "tipo": "consumivel", "equipado": False, "icone": "🧪"},
-            {"nome": "Cajado Arcano", "tipo": "arma", "equipado": False, "icone": "🔮"}
+            {"nome": "Espada Lendária", "tipo": "arma", "equipado": True, "icone": "⚔️", "nivel": 64},
+            {"nome": "Armadura de Dragão", "tipo": "armadura", "equipado": True, "icone": "🛡️", "nivel": 64},
+            {"nome": "Amuleto Ancestral", "tipo": "acessorio", "equipado": True, "icone": "💎", "nivel": 60},
+            {"nome": "Botas Velozes", "tipo": "calçado", "equipado": True, "icone": "👟", "nivel": 62},
+            {"nome": "Cajado Arcano", "tipo": "arma", "equipado": False, "icone": "🔮", "nivel": 58},
+            {"nome": "Escudo Divino", "tipo": "escudo", "equipado": False, "icone": "🛡️", "nivel": 61}
         ]
         
-        # Dados de conquistas (simulados)
+        # Dados multiplayer (nova funcionalidade)
+        self.multiplayer_data = {
+            "grupo_atual": "黄龙会小帮派",
+            "membros_online": 8,
+            "total_membros": 15,
+            "atividades": [
+                {"nome": "Dungeon em Grupo", "status": "Disponível", "icone": "🏰"},
+                {"nome": "PvP Arena", "status": "Ativo", "icone": "⚔️"},
+                {"nome": "Boss Mundial", "status": "Em andamento", "icone": "🐉"},
+                {"nome": "Evento Especial", "status": "Em breve", "icone": "🎪"}
+            ]
+        }
+        
+        # Dados de conquistas (atualizados)
         self.conquistas = [
-            {"titulo": "Primeiros Passos", "concluida": True, "icone": "🎯", "raridade": "bronze"},
-            {"titulo": "Mestre dos Quiz", "concluida": False, "icone": "🧠", "raridade": "prata"},
-            {"titulo": "Colecionador Épico", "concluida": False, "icone": "💎", "raridade": "ouro"}
+            {"titulo": "Primeiros Passos", "concluida": True, "icone": "🎯", "raridade": "bronze", "descricao": "Complete o tutorial"},
+            {"titulo": "Mestre dos Quiz", "concluida": True, "icone": "🧠", "raridade": "prata", "descricao": "Acertou 100 perguntas"},
+            {"titulo": "Colecionador Épico", "concluida": False, "icone": "💎", "raridade": "ouro", "descricao": "Colete 50 itens raros"},
+            {"titulo": "Lenda do Multiplayer", "concluida": True, "icone": "👥", "raridade": "prata", "descricao": "Participe de 50 grupos"}
         ]
+        
+        # Variável para controle do botão multiplayer
+        self.multiplayer_button_rect = None
         
         # Carrega texturas
         self._load_textures()
@@ -74,14 +88,15 @@ class ProfileView(arcade.View):
             self.user = "user"
             self.data = {}
         
-        # Dados do usuário com fallbacks seguros
-        self.display_name = self.data.get("display_name", self.data.get("nome", "Sara Simpson"))
+        # Dados do usuário com fallbacks seguros (atualizados conforme imagem)
+        self.display_name = self.data.get("display_name", "玩家名字七个字")  # Nome em chinês da imagem
         self.username = self.data.get("username", self.user)
-        self.level = self.data.get("level", 1)
-        self.xp = self.data.get("xp", 0)
-        self.max_xp = self.level * 100
-        self.trophies = self.data.get("trophies", 568878)
+        self.level = self.data.get("level", 64)  # Nível 64 da imagem
+        self.xp = self.data.get("xp", 75)  # 75% da imagem
+        self.max_xp = 100
+        self.trophies = self.data.get("trophies", 5721636)  # Número da imagem
         self.phase = self.data.get("phase", 1)
+        self.guild = self.data.get("guild", "黄龙会小帮派")  # Guilda da imagem
         
         print(f"👤 Perfil carregado: {self.display_name} (Nível {self.level})")
 
@@ -248,8 +263,15 @@ class ProfileView(arcade.View):
             anchor_x="center"
         )
         
+        # Guilda
+        arcade.draw_text(
+            self.guild, panel_x, info_y - 50,
+            (255, 215, 0), 16,
+            anchor_x="center", bold=True
+        )
+        
         # Level e XP
-        level_y = info_y - 60
+        level_y = info_y - 85
         
         arcade.draw_text(
             f"LEVEL {self.level}", panel_x, level_y,
@@ -260,7 +282,7 @@ class ProfileView(arcade.View):
         # Barra de XP
         bar_width = panel_width * 0.8
         bar_x = panel_x - bar_width/2
-        bar_y = level_y - 30
+        bar_y = level_y - 25
         
         # Fundo da barra
         arcade.draw_lrbt_rectangle_filled(
@@ -285,9 +307,16 @@ class ProfileView(arcade.View):
         
         # Texto XP
         arcade.draw_text(
-            f"{self.xp}/{self.max_xp} XP", panel_x, bar_y - 20,
+            f"{self.xp}%", panel_x, bar_y - 20,
             (200, 200, 200), 12,
             anchor_x="center"
+        )
+        
+        # Troféus
+        arcade.draw_text(
+            f"🏆 {self.trophies}", panel_x, bar_y - 45,
+            (255, 215, 0), 16,
+            anchor_x="center", bold=True
         )
 
     def _draw_active_tab_content(self):
@@ -305,8 +334,8 @@ class ProfileView(arcade.View):
             self._draw_personagem_tab(panel_x, panel_y, panel_width, panel_height)
         elif self.active_tab == 1:  # EQUIPAMENTOS
             self._draw_equipamentos_tab(panel_x, panel_y, panel_width, panel_height)
-        elif self.active_tab == 2:  # DESAFIOS
-            self._draw_desafios_tab(panel_x, panel_y, panel_width, panel_height)
+        elif self.active_tab == 2:  # MULTIPLAYER (NOVA ABA)
+            self._draw_multiplayer_tab(panel_x, panel_y, panel_width, panel_height)
         elif self.active_tab == 3:  # CONQUISTAS
             self._draw_conquistas_tab(panel_x, panel_y, panel_width, panel_height)
 
@@ -321,7 +350,7 @@ class ProfileView(arcade.View):
         
         # Título
         arcade.draw_text(
-            "DETALHES DO PERSONAGEM",
+            "ATRIBUTOS DO PERSONAGEM",
             x, y + height/2 - 30,
             (255, 215, 0), 24,
             anchor_x="center", bold=True
@@ -357,38 +386,39 @@ class ProfileView(arcade.View):
         self._draw_barra_vida(stats_x, stats_y, width * 0.4, self.personagem_data)
         self._draw_barra_mana(stats_x, stats_y - 40, width * 0.4, self.personagem_data)
         
-        # Atributos
+        # Atributos (conforme imagem)
         atributos_y = stats_y - 100
-        for i, (nome, valor) in enumerate(self.personagem_data["atributos"].items()):
-            attr_y = atributos_y - (i * 30)
+        atributos = [
+            ("ATAQUE FÍSICO", self.personagem_data["atributos"]["ataque_fisico"], "⚔️"),
+            ("ATAQUE MÁGICO", self.personagem_data["atributos"]["ataque_magico"], "🔮"),
+            ("DEFESA FÍSICA", self.personagem_data["atributos"]["defesa_fisica"], "🛡️"),
+            ("DEFESA MÁGICA", self.personagem_data["atributos"]["defesa_magica"], "✨"),
+            ("PRECISÃO", self.personagem_data["atributos"]["precisao"], "🎯"),
+            ("VELOC. ATAQUE", self.personagem_data["atributos"]["velocidade_ataque"], "⚡")
+        ]
+        
+        for i, (nome, valor, icone) in enumerate(atributos):
+            attr_y = atributos_y - (i * 35)
             
+            # Ícone
             arcade.draw_text(
-                nome.upper(), stats_x - 80, attr_y,
-                (200, 200, 200), 14,
+                icone, stats_x - 100, attr_y,
+                (255, 215, 0), 14,
+                anchor_x="center", anchor_y="center"
             )
             
-            # Barra do atributo
-            bar_width = 150
-            bar_x = stats_x - 30
-            bar_value = valor / 100.0
-            
-            # Fundo
-            arcade.draw_lrbt_rectangle_filled(
-                bar_x, bar_x + bar_width, attr_y - 8, attr_y + 8,
-                (50, 50, 50)
-            )
-            
-            # Preenchimento
-            arcade.draw_lrbt_rectangle_filled(
-                bar_x, bar_x + (bar_width * bar_value), attr_y - 8, attr_y + 8,
-                (139, 0, 0)  # Vermelho escuro
+            # Nome do atributo
+            arcade.draw_text(
+                nome, stats_x - 80, attr_y,
+                (200, 200, 200), 12,
+                anchor_y="center"
             )
             
             # Valor
             arcade.draw_text(
-                str(valor), bar_x + bar_width + 10, attr_y,
+                str(valor), stats_x + 120, attr_y,
                 (255, 255, 255), 14,
-                anchor_y="center"
+                anchor_x="right", anchor_y="center", bold=True
             )
 
     def _draw_equipamentos_tab(self, x, y, width, height):
@@ -414,8 +444,8 @@ class ProfileView(arcade.View):
             equip_y = start_y - (i * 60)
             self._draw_equipamento_item(x, equip_y, width * 0.8, 50, equip)
 
-    def _draw_desafios_tab(self, x, y, width, height):
-        """Desenha aba de desafios"""
+    def _draw_multiplayer_tab(self, x, y, width, height):
+        """Desenha aba multiplayer com botão para abrir tela completa"""
         # Fundo
         arcade.draw_lrbt_rectangle_filled(
             x - width/2, x + width/2,
@@ -425,17 +455,78 @@ class ProfileView(arcade.View):
         
         # Título
         arcade.draw_text(
-            "DESAFIOS ÉPICOS",
+            "MULTIPLAYER - GRUPOS",
             x, y + height/2 - 30,
             (255, 215, 0), 24,
             anchor_x="center", bold=True
         )
         
-        # Lista de desafios
-        start_y = y + height/2 - 70
-        for i, desafio in enumerate(self.desafios):
-            desafio_y = start_y - (i * 80)
-            self._draw_desafio_item(x, desafio_y, width * 0.8, 70, desafio)
+        # Informações do grupo atual
+        group_x = x
+        group_y = y + height/2 - 70
+        
+        arcade.draw_text(
+            f"GRUPO ATUAL: {self.multiplayer_data['grupo_atual']}",
+            group_x, group_y,
+            (255, 255, 255), 20,
+            anchor_x="center", bold=True
+        )
+        
+        arcade.draw_text(
+            f"MEMBROS: {self.multiplayer_data['membros_online']}/{self.multiplayer_data['total_membros']} ONLINE",
+            group_x, group_y - 30,
+            (0, 255, 0), 16,
+            anchor_x="center"
+        )
+        
+        # BOTÃO PARA ABRIR MULTIPLAYER COMPLETO
+        button_x = x
+        button_y = group_y - 80
+        button_width = 200
+        button_height = 40
+        
+        # Fundo do botão
+        arcade.draw_lrbt_rectangle_filled(
+            button_x - button_width/2, button_x + button_width/2,
+            button_y - button_height/2, button_y + button_height/2,
+            (100, 150, 255)  # Azul estilo Discord
+        )
+        
+        # Borda do botão
+        arcade.draw_lrbt_rectangle_outline(
+            button_x - button_width/2, button_x + button_width/2,
+            button_y - button_height/2, button_y + button_height/2,
+            (255, 255, 255), 2
+        )
+        
+        # Texto do botão
+        arcade.draw_text(
+            "ABRIR MULTIPLAYER COMPLETO",
+            button_x, button_y,
+            (255, 255, 255), 14,
+            anchor_x="center", anchor_y="center", bold=True
+        )
+        
+        # Guardar posição do botão para clique
+        self.multiplayer_button_rect = (
+            button_x - button_width/2, button_x + button_width/2,
+            button_y - button_height/2, button_y + button_height/2
+        )
+        
+        # Atividades multiplayer (abaixo do botão)
+        activities_y = button_y - 50
+        arcade.draw_text(
+            "ATIVIDADES DISPONÍVEIS:",
+            x - width/2 + 40, activities_y,
+            (255, 215, 0), 18,
+            bold=True
+        )
+        
+        # Lista de atividades
+        start_y = activities_y - 40
+        for i, atividade in enumerate(self.multiplayer_data["atividades"]):
+            activity_y = start_y - (i * 70)
+            self._draw_atividade_item(x, activity_y, width * 0.8, 60, atividade)
 
     def _draw_conquistas_tab(self, x, y, width, height):
         """Desenha aba de conquistas"""
@@ -557,15 +648,15 @@ class ProfileView(arcade.View):
             anchor_y="center", bold=True
         )
         
-        # Tipo
+        # Nível
         arcade.draw_text(
-            equipamento["tipo"].upper(), x + width/2 - 20, y,
+            f"Nv. {equipamento['nivel']}", x + width/2 - 20, y,
             (150, 150, 150), 12,
             anchor_x="right", anchor_y="center"
         )
 
-    def _draw_desafio_item(self, x, y, width, height, desafio):
-        """Desenha um item de desafio"""
+    def _draw_atividade_item(self, x, y, width, height, atividade):
+        """Desenha um item de atividade multiplayer (NOVO)"""
         # Fundo do item
         arcade.draw_lrbt_rectangle_filled(
             x - width/2, x + width/2,
@@ -580,38 +671,30 @@ class ProfileView(arcade.View):
             (139, 0, 0), 2
         )
         
-        # Título
+        # Ícone
         arcade.draw_text(
-            desafio["titulo"], x - width/2 + 20, y + 10,
+            atividade["icone"], x - width/2 + 25, y,
+            (255, 215, 0), 24,
+            anchor_y="center"
+        )
+        
+        # Nome da atividade
+        arcade.draw_text(
+            atividade["nome"], x - width/2 + 60, y + 10,
             (255, 255, 255), 16,
             bold=True
         )
         
-        # Barra de progresso
-        progresso = desafio["progresso"] / desafio["total"]
-        bar_width = width * 0.7
-        bar_x = x - width/2 + 20
-        bar_y = y - 10
+        # Status
+        status_color = (0, 255, 0) if atividade["status"] == "Disponível" else (
+            (255, 215, 0) if atividade["status"] == "Ativo" else (
+            (255, 100, 100) if atividade["status"] == "Em andamento" else (150, 150, 150)
+        ))
         
-        # Fundo
-        arcade.draw_lrbt_rectangle_filled(
-            bar_x, bar_x + bar_width, bar_y - 5, bar_y + 5,
-            (50, 50, 50)
-        )
-        
-        # Progresso
-        if progresso > 0:
-            arcade.draw_lrbt_rectangle_filled(
-                bar_x, bar_x + (bar_width * progresso), bar_y - 5, bar_y + 5,
-                (220, 20, 60)  # Vermelho
-            )
-        
-        # Texto do progresso
         arcade.draw_text(
-            f"{desafio['progresso']}/{desafio['total']}",
-            bar_x + bar_width + 10, bar_y,
-            (255, 255, 255), 12,
-            anchor_y="center"
+            atividade["status"], x + width/2 - 20, y,
+            status_color, 14,
+            anchor_x="right", anchor_y="center", bold=True
         )
 
     def _draw_conquista_item(self, x, y, width, height, conquista):
@@ -652,6 +735,12 @@ class ProfileView(arcade.View):
             conquista["titulo"], x - width/2 + 70, y + 10,
             title_color, 16,
             bold=True
+        )
+        
+        # Descrição
+        arcade.draw_text(
+            conquista["descricao"], x - width/2 + 70, y - 10,
+            (200, 200, 200), 12,
         )
         
         # Status
@@ -713,13 +802,14 @@ class ProfileView(arcade.View):
             (139, 0, 0), 2  # Vermelho escuro
         )
         
-        # Estatísticas do personagem
+        # Estatísticas do personagem (conforme imagem)
         stats = [
-            ("FORÇA", self.personagem_data["atributos"]["forca"], "⚔"),
-            ("VELOCIDADE", self.personagem_data["atributos"]["velocidade"], "🏃"), 
-            ("DEFESA", self.personagem_data["atributos"]["defesa"], "🛡"),
-            ("MAGIA", self.personagem_data["atributos"]["magia"], "🔮"),
-            ("AGILIDADE", self.personagem_data["atributos"]["agilidade"], "💨")
+            ("ATAQUE FÍSICO", self.personagem_data["atributos"]["ataque_fisico"], "⚔️"),
+            ("ATAQUE MÁGICO", self.personagem_data["atributos"]["ataque_magico"], "🔮"),
+            ("DEFESA FÍSICA", self.personagem_data["atributos"]["defesa_fisica"], "🛡️"),
+            ("DEFESA MÁGICA", self.personagem_data["atributos"]["defesa_magica"], "✨"),
+            ("PRECISÃO", self.personagem_data["atributos"]["precisao"], "🎯"),
+            ("VELOC. ATAQUE", self.personagem_data["atributos"]["velocidade_ataque"], "⚡")
         ]
         
         stat_spacing = (width - 40) / len(stats)
@@ -735,13 +825,13 @@ class ProfileView(arcade.View):
             
             arcade.draw_text(
                 label, x_pos, 45,
-                (150, 150, 150), 12,
+                (150, 150, 150), 10,
                 anchor_x="center"
             )
             
             arcade.draw_text(
                 str(value), x_pos, 30,
-                (255, 255, 255), 16,
+                (255, 255, 255), 14,
                 anchor_x="center", bold=True
             )
 
@@ -826,6 +916,22 @@ class ProfileView(arcade.View):
         except Exception as e:
             print(f"❌ Erro ao voltar para o menu: {e}")
 
+    def _open_multiplayer_view(self):
+        """Abre a tela multiplayer completa"""
+        try:
+            multiplayer_view = MultiplayerView(menu_view=self.menu_view)
+            self.window.show_view(multiplayer_view)
+            print("🎮 Abrindo tela multiplayer completa...")
+        except Exception as e:
+            print(f"❌ Erro ao abrir multiplayer: {e}")
+
+    def _handle_multiplayer_button_click(self, x, y):
+        """Verifica clique no botão do multiplayer"""
+        if self.multiplayer_button_rect:
+            x1, x2, y1, y2 = self.multiplayer_button_rect
+            if x1 <= x <= x2 and y1 <= y <= y2:
+                self._open_multiplayer_view()
+
     def on_mouse_press(self, x, y, button, modifiers):
         """Lida com cliques do mouse"""
         # Verifica clique nas abas
@@ -834,6 +940,10 @@ class ProfileView(arcade.View):
         # Verifica clique nas setas do personagem (se estiver na aba de personagem)
         if self.active_tab == 0:
             self._handle_character_navigation_click(x, y)
+        
+        # Verifica clique no botão multiplayer (se estiver na aba multiplayer)
+        if self.active_tab == 2:
+            self._handle_multiplayer_button_click(x, y)
 
     def _handle_tab_click(self, x, y):
         """Verifica clique nas abas de navegação"""

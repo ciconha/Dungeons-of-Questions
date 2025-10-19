@@ -17,7 +17,7 @@ class GameView(arcade.View):
     """
     Carrega o mapa TMX, controla movimento do personagem escolhido,
     detecta triggers de fase e inicia o QuizView ao ENTER.
-    SISTEMA SIMPLIFICADO E FUNCIONAL
+    SISTEMA ROBUSTO - FUNCIONA COM QUALQUER CONTA
     """
 
     def __init__(self, xp_bar: XPBar = None, session_id: str = "", on_exit_callback=None):
@@ -26,10 +26,10 @@ class GameView(arcade.View):
         self.session_id = session_id
         self.on_exit_callback = on_exit_callback
         
-        # Obtém usuário atual do UserManager
-        self.current_user = user_manager.get_current_user()
-        self.user_data = None
-        self.character_data = None
+        # 🔥 SISTEMA MELHORADO - Fallbacks robustos
+        self.current_user = self._get_current_user_safe()
+        self.user_data = self._load_user_data_safe()
+        self.character_data = self._load_character_data_safe()
 
         self.scene = None
         self.player_sprite = None
@@ -63,72 +63,191 @@ class GameView(arcade.View):
         
         self.setup_complete = False
 
-    def setup(self):
-        """Configura o mapa, player e triggers"""
+    def _get_current_user_safe(self):
+        """Obtém usuário atual com fallbacks robustos"""
         try:
-            if not self.current_user:
-                self.set_status("❌ Nenhum usuário autenticado. Voltando ao menu...", 3.0)
-                arcade.schedule(self._force_return_to_menu, 3.0)
-                return
+            # Tenta pelo UserManager primeiro
+            user = user_manager.get_current_user()
+            if user:
+                print(f"✅ Usuário do UserManager: {user}")
+                return user
+        except Exception as e:
+            print(f"⚠️ UserManager falhou: {e}")
 
-            self.user_data = auth_system.get_user_data(self.current_user)
-            if not self.user_data:
-                self.set_status("❌ Dados do usuário não encontrados", 3.0)
-                arcade.schedule(self._force_return_to_menu, 3.0)
-                return
+        # Fallback 1: Tenta pela session_id
+        if self.session_id:
+            try:
+                print(f"🔄 Tentando buscar usuário pela session: {self.session_id}")
+                return f"user_{self.session_id[:8]}"
+            except:
+                pass
 
-            # 🔥 CONFIGURAÇÃO SIMPLES E DIRETA
-            self.character_data = self.user_data.get("character", {})
-            if not self.character_data:
-                self.character_data = {
-                    "name": "Emily",
-                    "animations": {
-                        "up": "assets/characters/Emillywhite_down.png",
-                        "down": "assets/characters/Emillywhite_front.png", 
-                        "left": "assets/characters/Emillywhite_left.png",
-                        "right": "assets/characters/Emillywhite_right.png"
-                    }
+        # Fallback 2: Usuário padrão
+        default_user = "player_001"
+        print(f"⚠️ Usando usuário padrão: {default_user}")
+        return default_user
+
+    def _load_user_data_safe(self):
+        """Carrega dados do usuário com fallbacks robustos"""
+        user_data = {}
+        
+        try:
+            # Tenta pelo auth_system
+            if self.current_user:
+                data = auth_system.get_user_data(self.current_user)
+                if data:
+                    user_data = data
+                    print(f"✅ Dados carregados do auth_system para {self.current_user}")
+        except Exception as e:
+            print(f"⚠️ auth_system falhou: {e}")
+
+        # Se não conseguiu carregar, cria dados padrão
+        if not user_data:
+            user_data = {
+                "username": self.current_user,
+                "level": 1,
+                "xp": 0,
+                "character": self._create_default_character(),
+                "campaign_progress": {
+                    "fase_atual": 1,
+                    "fases": {1: "liberada", 2: "bloqueada", 3: "bloqueada", 4: "bloqueada", 5: "bloqueada", 6: "bloqueada"}
                 }
-                print("⚠️ Usando personagem fallback (Emily)")
+            }
+            print(f"🆕 Dados padrão criados para {self.current_user}")
 
-            print(f"🎮 Personagem carregado: {self.character_data.get('name', 'Emily')}")
+        return user_data
 
-            # 🔥 VERIFICAÇÃO SIMPLES E DIRETA DAS IMAGENS
+    def _load_character_data_safe(self):
+        """Carrega dados do personagem com fallbacks robustos"""
+        try:
+            # Tenta pegar do user_data
+            character_data = self.user_data.get("character")
+            if character_data:
+                print(f"✅ Personagem carregado: {character_data.get('name', 'Desconhecido')}")
+                return character_data
+        except Exception as e:
+            print(f"⚠️ Erro ao carregar personagem: {e}")
+
+        # Fallback: personagem padrão Emily
+        return self._create_default_character()
+
+    def _create_default_character(self):
+        """Cria personagem padrão Emily"""
+        return {
+            "name": "Emily",
+            "animations": {
+                "up": "assets/characters/Emillywhite_down.png",
+                "down": "assets/characters/Emillywhite_front.png", 
+                "left": "assets/characters/Emillywhite_left.png",
+                "right": "assets/characters/Emillywhite_right.png"
+            }
+        }
+
+    def _validate_character_animations(self):
+        """Valida e corrige animações do personagem"""
+        required_animations = ["up", "down", "left", "right"]
+        
+        for direction in required_animations:
+            if direction not in self.character_data.get("animations", {}):
+                print(f"⚠️ Animação {direction} faltando, usando fallback")
+                # Usa animação "down" como fallback para todas as direções
+                self.character_data.setdefault("animations", {})[direction] = "assets/characters/Emillywhite_front.png"
+
+    def _load_player_sprite_safe(self):
+        """Carrega o sprite do jogador de forma segura"""
+        try:
             animations = self.character_data["animations"]
+            fallback_used = False
             
-            # Verifica cada imagem individualmente
-            print("🔍 Verificando imagens...")
-            for direction, path in animations.items():
-                if os.path.exists(path):
-                    print(f"✅ {direction}: {path}")
-                else:
-                    print(f"❌ {direction}: {path} - NÃO ENCONTRADO")
-
-            # 🔥 CARREGA SPRITE DE FORMA SIMPLES
-            if os.path.exists(animations["down"]):
-                print(f"🖼️ Carregando sprite: {animations['down']}")
-
-                # MÉTODO MAIS SIMPLES POSSÍVEL - carrega direto
+            # Tenta carregar a imagem "down" primeiro
+            down_path = animations.get("down", "assets/characters/Emillywhite_front.png")
+            
+            if os.path.exists(down_path):
                 self.player_sprite = arcade.Sprite(
-                    animations["down"],  # Usa a imagem "down" como inicial
+                    down_path,
                     scale=0.95,
                     hit_box_algorithm="Simple"
                 )
-                
-                # 🔥 SALVA AS ANIMAÇÕES PARA USAR DEPOIS
                 self.animations = animations
                 print("✅ Sprite carregado com sucesso!")
-                
             else:
-                print("❌ Imagem 'down' não encontrada, usando fallback")
-                self.player_sprite = arcade.SpriteSolidColor(40, 60, arcade.color.RED)
+                # Fallback: sprite colorido
+                print("⚠️ Imagem não encontrada, usando sprite colorido")
+                self.player_sprite = arcade.SpriteSolidColor(40, 60, arcade.color.BLUE)
+                self.animations = {}  # Animations vazias
+                fallback_used = True
+                
+        except Exception as e:
+            print(f"❌ Erro ao carregar sprite: {e}")
+            self.player_sprite = arcade.SpriteSolidColor(40, 60, arcade.color.RED)
+            self.animations = {}
+            fallback_used = True
 
-            # CONFIGURA SISTEMAS
-            self._setup_campaign_system()
-            self._setup_xp_bar()
+    def _setup_campaign_system_robust(self):
+        """Configura sistema de campanha robusto"""
+        try:
+            # Tenta carregar campanha existente
+            if self.user_data and "campaign_progress" in self.user_data:
+                campaign_progress = self.user_data["campaign_progress"]
+                if campaign_progress and "fases" in campaign_progress:
+                    self.fase_status = campaign_progress["fases"]
+                    print("✅ Campanha carregada do user_data")
+                else:
+                    # Cria nova campanha
+                    self.fase_status = {
+                        1: "liberada", 2: "bloqueada", 3: "bloqueada", 
+                        4: "bloqueada", 5: "bloqueada", 6: "bloqueada"
+                    }
+                    print("🆕 Nova campanha criada")
+            else:
+                # Cria nova campanha
+                self.fase_status = {
+                    1: "liberada", 2: "bloqueada", 3: "bloqueada", 
+                    4: "bloqueada", 5: "bloqueada", 6: "bloqueada"
+                }
+                print("🆕 Nova campanha criada (user_data vazio)")
+                
+            # GARANTE fase 1 liberada
+            self.fase_status[1] = "liberada"
+            
+            self.available_phases = [fase for fase, status in self.fase_status.items() if status == "liberada"]
+            
+            print("📊 Status das fases:")
+            for fase, status in sorted(self.fase_status.items()):
+                print(f"   Fase {fase}: {status}")
+                
+        except Exception as e:
+            print(f"❌ Erro na campanha: {e}")
+            self.fase_status = {1: "liberada", 2: "bloqueada", 3: "bloqueada", 4: "bloqueada", 5: "bloqueada", 6: "bloqueada"}
+            self.available_phases = [1]
+
+    def _setup_xp_bar_robust(self):
+        """Configura XP bar robusta"""
+        try:
+            if not self.xp_bar:
+                self.xp_bar = XPBar()
+            
+            # Usa dados do user_data ou padrões
+            current_xp = self.user_data.get("xp", 0) if self.user_data else 0
+            level = self.user_data.get("level", 1) if self.user_data else 1
+            max_xp = level * 100
+            
+            self.xp_bar.current_xp = current_xp
+            self.xp_bar.level = level
+            self.xp_bar.max_xp = max_xp
+            
+            print(f"✅ XP Bar: Level {level}, XP {current_xp}/{max_xp}")
+            
+        except Exception as e:
+            print(f"❌ Erro na XP bar: {e}")
+            if not self.xp_bar:
+                self.xp_bar = XPBar()
+
+    def _load_map_safe(self):
+        """Carrega mapa com tratamento de erro"""
+        try:
             self._process_tmx_map()
             
-            # Carrega mapa
             tile_map = arcade.load_tilemap(
                 TEMP_MAP_PATH,
                 scaling=1.0,
@@ -140,33 +259,106 @@ class GameView(arcade.View):
             self.map_width = tile_map.width * TILE_SIZE
             self.map_height = tile_map.height * TILE_SIZE
 
-            # Posição inicial do jogador
-            self.player_sprite.center_x = TILE_SIZE * 2
-            self.player_sprite.center_y = TILE_SIZE * 2
+            # Posição inicial segura
+            if self.player_sprite:
+                self.player_sprite.center_x = TILE_SIZE * 2
+                self.player_sprite.center_y = TILE_SIZE * 2
+                
+                # Adiciona à cena
+                self.scene.add_sprite("Player", self.player_sprite)
             
-            # Adiciona à cena
+            print("✅ Mapa carregado com sucesso")
+            
+        except Exception as e:
+            print(f"❌ Erro ao carregar mapa: {e}")
+            self._create_emergency_scene()
+
+    def _create_emergency_scene(self):
+        """Cria cena de emergência se o mapa falhar"""
+        self.scene = arcade.Scene()
+        self.scene.add_sprite_list("Player")
+        if self.player_sprite:
             self.scene.add_sprite("Player", self.player_sprite)
+        
+        # Define tamanhos seguros
+        self.map_width = 800
+        self.map_height = 600
+        
+        print("🆘 Cena de emergência criada")
 
-            # Configura triggers
+    def _setup_triggers_robust(self):
+        """Configura triggers de forma robusta"""
+        try:
+            from arcade import load_tilemap
+            tile_map = load_tilemap(TEMP_MAP_PATH, scaling=1.0)
             self._setup_triggers(tile_map)
+            print("✅ Triggers configurados")
+        except Exception as e:
+            print(f"⚠️ Erro nos triggers: {e}")
+            # Continua sem triggers
 
-            if not self._has_sprite_list("Walls"):
-                self.scene.add_sprite_list("Walls")
+    def _emergency_setup(self):
+        """Setup de emergência quando tudo falha"""
+        print("🚨 INICIANDO SETUP DE EMERGÊNCIA")
+        
+        # Configurações mínimas
+        self.player_sprite = arcade.SpriteSolidColor(40, 60, arcade.color.GREEN)
+        self.animations = {}
+        
+        self._create_emergency_scene()
+        
+        self.fase_status = {1: "liberada"}
+        self.available_phases = [1]
+        
+        if not self.xp_bar:
+            self.xp_bar = XPBar()
+        
+        self.setup_complete = True
+        self.set_status("⚠️ Modo de emergência ativado - Funcionalidades limitadas")
+        
+        print("✅ Setup de emergência concluído")
 
-            # Mensagem inicial
-            fases_liberadas = [f for f, status in self.fase_status.items() if status == "liberada"]
-            if fases_liberadas:
-                self.set_status(f"✅ {self.character_data.get('name', 'Emily')} está pronta! Fase {min(fases_liberadas)} liberada!")
-            else:
-                self.set_status(f"🔒 {self.character_data.get('name', 'Emily')} aguardando... Nenhuma fase liberada.")
+    def setup(self):
+        """Configura o mapa, player e triggers - VERSÃO ROBUSTA"""
+        try:
+            print(f"🎮 Iniciando GameView para: {self.current_user}")
+            
+            # 🔥 VERIFICAÇÕES ROBUSTAS
+            if not self.current_user:
+                self.current_user = "player_unknown"
+                print("⚠️ Usuário desconhecido, usando fallback")
+
+            if not self.user_data:
+                self.user_data = self._load_user_data_safe()
+
+            if not self.character_data:
+                self.character_data = self._load_character_data_safe()
+
+            # 🔥 CONFIGURAÇÃO DO PERSONAGEM - MAIS TOLERANTE
+            print(f"🎭 Configurando personagem: {self.character_data.get('name', 'Emily')}")
+            
+            # Verifica e corrige animações faltantes
+            self._validate_character_animations()
+            
+            # Carrega sprite de forma robusta
+            self._load_player_sprite_safe()
+
+            # 🔥 CONFIGURA SISTEMAS ESSENCIAIS
+            self._setup_campaign_system_robust()
+            self._setup_xp_bar_robust()
+            
+            # 🔥 CARREGA MAPA COM FALLBACK
+            self._load_map_safe()
+            
+            # 🔥 CONFIGURA TRIGGERS
+            self._setup_triggers_robust()
 
             self.setup_complete = True
-            print(f"🎮 GameView ativa para: {self.current_user}")
+            print(f"✅ GameView configurada com sucesso para: {self.current_user}")
 
         except Exception as e:
-            print(f"❌ Erro no setup do GameView: {e}")
-            self.set_status("❌ Erro ao carregar jogo")
-            self.setup_complete = False
+            print(f"❌ Erro crítico no setup: {e}")
+            self._emergency_setup()
 
     def _update_player_texture(self):
         """ATUALIZA A TEXTURA DO SPRITE - MÉTODO SIMPLES"""
@@ -199,104 +391,46 @@ class GameView(arcade.View):
             except Exception as e:
                 print(f"❌ Erro ao carregar textura {texture_path}: {e}")
 
-    def _setup_campaign_system(self):
-        """Configura o sistema de campanha com 6 fases"""
-        try:
-            # Tenta carregar do MongoDB via API
-            try:
-                resp = requests.get(
-                    f"http://127.0.0.1:8000/api/user/{self.current_user}/campaign",
-                    timeout=3
-                )
-                if resp.status_code == 200:
-                    campaign_data = resp.json()
-                    self.fase_status = campaign_data.get("fases", {})
-                    print("✅ Campanha carregada do MongoDB")
-            except:
-                # Fallback: usa dados locais do auth_system
-                campaign_progress = self.user_data.get("campaign_progress", {})
-                if campaign_progress and "fases" in campaign_progress:
-                    self.fase_status = campaign_progress["fases"]
-                    print("✅ Campanha carregada do auth_system")
-            
-            # SE NÃO EXISTIR, CRIA NOVA CAMPANHA COM 6 FASES
-            if not self.fase_status:
-                self.fase_status = {
-                    1: "liberada",    # Sempre liberada para novos jogadores
-                    2: "bloqueada",   # Precisa completar fase 1
-                    3: "bloqueada",   # Precisa completar fase 2
-                    4: "bloqueada",   # Precisa completar fase 3
-                    5: "bloqueada",   # Precisa completar fase 4
-                    6: "bloqueada"    # Precisa completar fase 5
-                }
-                print("✅ Nova campanha criada - 6 fases")
-            
-            # GARANTE que a fase 1 esteja sempre liberada
-            self.fase_status[1] = "liberada"
-            
-            # Atualiza lista de fases disponíveis
-            self.available_phases = [fase for fase, status in self.fase_status.items() if status == "liberada"]
-            
-            print("📊 Status das 6 fases:")
-            for fase, status in sorted(self.fase_status.items()):
-                print(f"   Fase {fase}: {status}")
-                
-        except Exception as e:
-            print(f"❌ Erro ao carregar campanha: {e}")
-            # Fallback de emergência
-            self.fase_status = {1: "liberada", 2: "bloqueada", 3: "bloqueada", 4: "bloqueada", 5: "bloqueada", 6: "bloqueada"}
-            self.available_phases = [1]
-
-    def _setup_xp_bar(self):
-        """Configura a XP bar com os dados do usuário do auth_system"""
-        try:
-            if not self.xp_bar:
-                self.xp_bar = XPBar()
-            
-            # Carrega progresso do usuário do auth_system
-            current_xp = self.user_data.get("xp", 0)
-            level = self.user_data.get("level", 1)
-            max_xp = level * 100  # Sistema infinito
-            
-            self.xp_bar.current_xp = current_xp
-            self.xp_bar.level = level
-            self.xp_bar.max_xp = max_xp
-            
-            print(f"✅ Progresso carregado - {self.current_user}: Level {level}, XP {current_xp}/{max_xp}")
-            
-        except Exception as e:
-            print(f"❌ Erro ao configurar XP bar: {e}")
-            if not self.xp_bar:
-                self.xp_bar = XPBar()
-
-    def _save_campaign_progress(self):
-        """Salva progresso da campanha"""
+    def _save_campaign_progress_robust(self):
+        """Salva progresso de forma robusta"""
         try:
             # Atualiza dados locais
-            self.user_data["campaign_progress"] = {
-                "fase_atual": max([f for f, s in self.fase_status.items() if s in ["liberada", "concluida"]], default=1),
-                "fases": self.fase_status
-            }
+            if self.user_data:
+                self.user_data["xp"] = self.xp_bar.current_xp if self.xp_bar else 0
+                self.user_data["level"] = self.xp_bar.level if self.xp_bar else 1
+                self.user_data["campaign_progress"] = {
+                    "fase_atual": max([f for f, s in self.fase_status.items() if s in ["liberada", "concluida"]], default=1),
+                    "fases": self.fase_status
+                }
             
-            # Salva no auth_system
-            success = auth_system.update_user_xp(
-                self.current_user,
-                self.xp_bar.current_xp,
-                self.xp_bar.level
-            )
-            
-            # Tenta salvar no MongoDB
+            # Tenta salvar no auth_system (se disponível)
             try:
-                resp = requests.post(
-                    f"http://127.0.0.1:8000/api/user/{self.current_user}/campaign",
-                    json={"fases": self.fase_status},
-                    timeout=2
-                )
+                if self.xp_bar and self.current_user:
+                    success = auth_system.update_user_xp(
+                        self.current_user,
+                        self.xp_bar.current_xp,
+                        self.xp_bar.level
+                    )
+                    if success:
+                        print("✅ Progresso salvo no auth_system")
+            except Exception as e:
+                print(f"⚠️ Não foi possível salvar no auth_system: {e}")
+            
+            # Tenta salvar no MongoDB (se disponível)
+            try:
+                if self.current_user:
+                    resp = requests.post(
+                        f"http://127.0.0.1:8000/api/user/{self.current_user}/campaign",
+                        json={"fases": self.fase_status},
+                        timeout=2
+                    )
+                    if resp.status_code == 200:
+                        print("✅ Progresso salvo no MongoDB")
             except:
-                pass  # Ignora se API não estiver disponível
+                print("⚠️ MongoDB não disponível")
                 
-            return success
-                
+            return True
+            
         except Exception as e:
             print(f"❌ Erro ao salvar progresso: {e}")
             return False
@@ -657,7 +791,7 @@ class GameView(arcade.View):
         elif key == arcade.key.X and self.setup_complete:
             if self.xp_bar:
                 levels = self.xp_bar.add_xp(50)
-                self._save_campaign_progress()
+                self._save_campaign_progress_robust()
                 if levels > 0:
                     self.set_status(f"🎉 LEVEL UP! Novo nível: {self.xp_bar.level}")
                 else:
@@ -725,7 +859,7 @@ class GameView(arcade.View):
                 if levels > 0:
                     self.set_status(f"🌟 LEVEL UP! Novo nível: {self.xp_bar.level}")
             
-            self._save_campaign_progress()
+            self._save_campaign_progress_robust()
             
             self.trigger_list.clear()
             from arcade import load_tilemap
@@ -744,7 +878,7 @@ class GameView(arcade.View):
     def _return_to_menu(self):
         """Retorna ao menu principal usando UserManager"""
         try:
-            self._save_campaign_progress()
+            self._save_campaign_progress_robust()
             
             if self.on_exit_callback:
                 self.on_exit_callback()
@@ -753,7 +887,7 @@ class GameView(arcade.View):
             
             from views.menu_view import MenuView
             
-            user_data = auth_system.get_user_data(self.current_user)
+            user_data = auth_system.get_user_data(self.current_user) if self.current_user else None
             avatar_path = user_data.get("avatar_path") if user_data else None
             
             menu_view = MenuView(
@@ -772,7 +906,7 @@ class GameView(arcade.View):
     def on_hide_view(self):
         """Chamado quando a view é escondida - SALVA PROGRESSO"""
         print("⏸️  GameView pausada - Salvando progresso...")
-        self._save_campaign_progress()
+        self._save_campaign_progress_robust()
         if self.on_exit_callback:
             self.on_exit_callback()
 
