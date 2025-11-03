@@ -549,7 +549,7 @@ Quando você tiver screenshots, substitua os placeholders por:
     <td style="vertical-align: top; padding: 10px;">
       <details>
         <summary><strong>Tela do Mapa</strong></summary>
-        <img src="https://github.com/user-attachments/assets/7ef41490-e68d-4ec3-b82a-905754076600">
+        <img src="https://github.com/user-attachments/assets/9550cdbb-ab99-4382-9800-411b44c0e51b">
       </details>
     </td>
     <td style="vertical-align: top; padding: 10px;">
