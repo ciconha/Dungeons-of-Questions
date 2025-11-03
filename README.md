@@ -512,7 +512,7 @@ Quando você tiver screenshots, substitua os placeholders por:
       <details>
         <summary><strong>Tela de Login</strong></summary>
         <p>hello my familly</p>
-        <img  src="https://github-production-user-asset-6210df.s3.amazonaws.com/131923066/503011825-2a984ba1-a868-49ac-b940-6280c053245f.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20251019%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251019T210702Z&X-Amz-Expires=300&X-Amz-Signature=7b6d1b59404e5a7cb71d46dc9db94d86f2a37abd589e480f2fbe6e7250a5760c&X-Amz-SignedHeaders=host" width="220">
+        <img  src="https://github.com/user-attachments/assets/2a984ba1-a868-49ac-b940-6280c053245f" width="220">
       </details>
     </td>
     <td style="vertical-align: top; padding: 10px;">
