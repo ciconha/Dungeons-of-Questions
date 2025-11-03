@@ -533,13 +533,13 @@ Quando você tiver screenshots, substitua os placeholders por:
     <td style="vertical-align: top; padding: 10px;">
       <details>
         <summary><strong>Tela do Menu</strong></summary>
-        <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/131923066/503012205-9fd44d2c-03da-482b-84db-14e9d2cd3d1d.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20251019%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251019T211252Z&X-Amz-Expires=300&X-Amz-Signature=06527f575d116edaaea7408d5436df01549da27be2d30798eb900b46b309e525&X-Amz-SignedHeaders=host" width="220">
+        <img src="https://github.com/user-attachments/assets/9fd44d2c-03da-482b-84db-14e9d2cd3d1d" width="220">
       </details>
     </td>
     <td style="vertical-align: top; padding: 10px;">
       <details>
         <summary><strong>Tela do Perfil</strong></summary>
-        <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/131923066/503012380-39baab26-890d-4530-9a66-7a15364a76f4.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20251019%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251019T211544Z&X-Amz-Expires=300&X-Amz-Signature=fcb62d2928144c8645bf0d1dfcc94a7698dece9c4596e5a762e027243c67208e&X-Amz-SignedHeaders=host" width="120">
+        <img src="https://github.com/user-attachments/assets/39baab26-890d-4530-9a66-7a15364a76f4" width="120">
       </details>
     </td>
 </table>
@@ -549,13 +549,13 @@ Quando você tiver screenshots, substitua os placeholders por:
     <td style="vertical-align: top; padding: 10px;">
       <details>
         <summary><strong>Tela do Mapa</strong></summary>
-        <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/131923066/503013496-832dcb8a-4781-475d-a7e3-4c4addcc0dcc.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20251019%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251019T213329Z&X-Amz-Expires=300&X-Amz-Signature=5fd837ba91e24cc81d12331114b5fe1a87b765c02737140b8056ade9f8d74cc5&X-Amz-SignedHeaders=host">
+        <img src="https://github.com/user-attachments/assets/7ef41490-e68d-4ec3-b82a-905754076600">
       </details>
     </td>
     <td style="vertical-align: top; padding: 10px;">
       <details>
         <summary><strong>Tela do Quiz</strong></summary>
-        <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/131923066/503012617-6583651f-1b52-4499-b65c-58d1b617e9db.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20251019%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251019T211911Z&X-Amz-Expires=300&X-Amz-Signature=0aaf5f172c6c22e2510a57ffe4be7d18b16e7a66c1e9a65688c6573f873046ed&X-Amz-SignedHeaders=host" width="220">
+        <img src="https://github.com/user-attachments/assets/6583651f-1b52-4499-b65c-58d1b617e9db" width="220">
       </details>
     </td>
 </table>
