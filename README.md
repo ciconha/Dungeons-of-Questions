@@ -523,7 +523,7 @@ Quando você tiver screenshots, substitua os placeholders por:
         <td style="vertical-align: top; padding: 10px;">
       <details>
         <summary><strong>Tela de Personagens</strong></summary>
-        <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/131923066/503012156-75e39fe3-860b-4c36-8d6e-9d5d6c31b7aa.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20251019%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251019T211139Z&X-Amz-Expires=300&X-Amz-Signature=0f0bff4c8c24f48fc6312eb08e294726405a5670bbc75c25e512fe4ab3f7595f&X-Amz-SignedHeaders=host" width="220">
+        <img src="https://github.com/user-attachments/assets/75e39fe3-860b-4c36-8d6e-9d5d6c31b7aa" width="220">
       </details>
     </td>
 </table>
