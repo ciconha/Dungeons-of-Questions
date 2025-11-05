@@ -1,3 +1,5 @@
+# views/menu_view.py
+
 import os
 import requests
 import arcade
@@ -13,6 +15,8 @@ from views.game_view import GameView
 from assets.xp.xp import XPBar
 from auth.simple_auth import auth_system
 from views.profile_view import ProfileView
+from views.shop_view import ShopView
+from auth.user_manager import user_manager
 
 BASE_API_URL = "http://127.0.0.1:8000/api"
 
@@ -78,7 +82,11 @@ class MenuView(arcade.View):
     def _initialize_user_data(self):
         """Inicializa dados do usuário uma única vez"""
         if self._original_username != "Jogador":
-            self.user_data = auth_system.get_user_data(self._original_username)
+            try:
+                self.user_data = auth_system.get_user_data(self._original_username)
+            except Exception:
+                self.user_data = None
+
             if self.user_data and not self._original_avatar_path:
                 self.avatar_path = self.user_data.get("avatar_path")
 
@@ -244,24 +252,87 @@ class MenuView(arcade.View):
             self.loading_avatar = False
 
     def refresh_user_data(self):
-        """Atualiza dados do usuário quando volta de outras views"""
+        """Atualiza dados do usuário quando volta de outras views.
+        Consome: user_manager (memória), auth_system (persistente) e aceita dados já atribuídos a this.user_data.
+        """
         print(f"🔄 Atualizando dados do usuário: {self._original_username}")
-        
-        if self._original_username != "Jogador":
-            fresh_data = auth_system.get_user_data(self._original_username)
-            if fresh_data:
-                self.user_data = fresh_data
-                
+
+        # 1) Se o Menu já recebeu estado diretamente (por atribuição do GameView), prioriza isso.
+        # Exemplo: game_view pode fazer menu_view.user_data = game_view.user_data antes de mostrar.
+        if self.user_data:
+            try:
+                # se xp_bar existir, aplica
                 if self.xp_bar:
-                    user_xp = self.user_data.get("xp", 0)
-                    user_level = self.user_data.get("level", 1)
-                    
-                    self.xp_bar.current_xp = user_xp
-                    self.xp_bar.level = user_level
-                    
-                    self._update_text_elements()
-                    
-                    print(f"✅ Dados atualizados: Nível {user_level}, XP {user_xp}/{self.xp_bar.max_xp}")
+                    ud_xp = self.user_data.get("xp", None)
+                    ud_level = self.user_data.get("level", None)
+                    if ud_xp is not None:
+                        self.xp_bar.current_xp = ud_xp
+                    if ud_level is not None:
+                        self.xp_bar.level = ud_level
+            except Exception:
+                pass
+
+        # 2) Tenta sincronizar com user_manager (estado em memória atualizado pelo GameView)
+        try:
+            if user_manager and hasattr(user_manager, "get_current_user"):
+                try:
+                    um_state = user_manager.get_current_user()
+                except TypeError:
+                    # Algumas implementações podem exigir parâmetros; tentamos sem ao menos
+                    um_state = None
+                except Exception:
+                    um_state = None
+
+                # Se o user_manager devolve uma estrutura com xp/level ou um XPBar, aplicamos.
+                if um_state:
+                    try:
+                        # Caso retorne um objeto com attributes current_xp/level
+                        if hasattr(um_state, "current_xp") and hasattr(um_state, "level"):
+                            if self.xp_bar:
+                                self.xp_bar.current_xp = um_state.current_xp
+                                self.xp_bar.level = um_state.level
+                        # Caso retorne dict
+                        elif isinstance(um_state, dict):
+                            if self.xp_bar:
+                                self.xp_bar.current_xp = um_state.get("current_xp", self.xp_bar.current_xp)
+                                self.xp_bar.level = um_state.get("level", self.xp_bar.level)
+                    except Exception:
+                        pass
+        except Exception:
+            pass
+
+        # 3) Em seguida, recarrega do auth_system (fonte canônica)
+        try:
+            if self._original_username != "Jogador":
+                fresh = auth_system.get_user_data(self._original_username)
+                if fresh and isinstance(fresh, dict):
+                    self.user_data = fresh
+                    # Aplica xp/level vindos do auth_system
+                    if self.xp_bar:
+                        self.xp_bar.current_xp = self.user_data.get("xp", self.xp_bar.current_xp)
+                        self.xp_bar.level = self.user_data.get("level", self.xp_bar.level)
+        except Exception:
+            pass
+
+        # 4) Atualiza texto e elementos da UI com os valores finais
+        self._update_text_elements()
+
+        # 5) Se avatar_path mudou no user_data, recarrega avatar
+        try:
+            if self.user_data:
+                new_avatar = self.user_data.get("avatar_path")
+                if new_avatar and new_avatar != self.avatar_path:
+                    self.avatar_path = new_avatar
+                    self._load_avatar()
+        except Exception:
+            pass
+
+        # Debug
+        try:
+            if self.xp_bar:
+                print(f"✅ Dados sincronizados: LEVEL {self.xp_bar.level}, XP {self.xp_bar.current_xp}/{self.xp_bar.max_xp}")
+        except Exception:
+            pass
 
     def _update_text_elements(self):
         """Atualiza os elementos de texto com dados atuais"""
@@ -273,13 +344,16 @@ class MenuView(arcade.View):
                 nome = self.user_data.get("nome", self.player_id)
                 nivel = self.user_data.get("level", 1)
                 xp = self.user_data.get("xp", 0)
+                moedas = self.user_data.get("coins", 0)
                 self.welcome_text.text = f"Bem-vindo, {nome}!"
-                self.stats_text.text = f"Nível {nivel} • {xp} XP"
-
-    def set_status(self, message: str, duration: float = 2.0):
-        """Define mensagem de status temporária."""
-        self.status_message = message
-        self.status_timer = duration
+                self.stats_text.text = f"Nível {nivel} • {xp} XP • {moedas}💰"
+            else:
+                # fallback quando user_data está vazio
+                if self.welcome_text:
+                    self.welcome_text.text = f"Bem-vindo, {self.player_id}!"
+                if self.stats_text:
+                    moedas = self.user_data.get("coins", 0) if self.user_data else 0
+                    self.stats_text.text = f"Nível {self.xp_bar.level} • {self.xp_bar.current_xp} XP • {moedas}💰"
 
     def _setup_ui(self):
         """Monta background, título, ID e botões."""
@@ -344,16 +418,18 @@ class MenuView(arcade.View):
             anchor_x="center", bold=True
         )
         
+        # Estatísticas atualizadas com moedas
+        moedas = self.user_data.get("coins", 0) if self.user_data else 0
         self.stats_text = arcade.Text(
-            f"Nível {nivel} • {self.user_data.get('xp', 0) if self.user_data else 0} XP",
+            f"Nível {nivel} • {self.user_data.get('xp', 0) if self.user_data else 0} XP • {moedas}💰",
             SCREEN_WIDTH/2, SCREEN_HEIGHT - 210,
             arcade_color.LIGHT_GREEN, 14,
             anchor_x="center"
         )
 
-        # Rodapé ATUALIZADO
+        # Rodapé ATUALIZADO - REMOVIDO "O: Opções"
         self.footer_text = arcade.Text(
-            "ESC: Sair  •  C/ENTER: Campanha  •  O: Opções • P/Clique Avatar: Perfil",
+            "ESC: Sair  •  C/ENTER: Campanha  •  L: Loja  •  P/Clique Avatar: Perfil",
             SCREEN_WIDTH/2, 30,
             arcade_color.LIGHT_GRAY, 10,
             anchor_x="center"
@@ -365,9 +441,10 @@ class MenuView(arcade.View):
         button_spacing = 70
         start_y = SCREEN_HEIGHT / 2 + 80
         
+        # SUBSTITUÍDO "OPTIONS" por "LOJA"
         self.buttons = [
             RPGButton("CAMPAIGN", SCREEN_WIDTH - 150, start_y, width=button_width, height=button_height),
-            RPGButton("OPTIONS", SCREEN_WIDTH - 150, start_y - (button_spacing * 1), width=button_width, height=button_height),
+            RPGButton("LOJA", SCREEN_WIDTH - 150, start_y - (button_spacing * 1), width=button_width, height=button_height),
             RPGButton("SAIR", SCREEN_WIDTH - 150, start_y - (button_spacing * 2), width=button_width, height=button_height),
         ]
 
@@ -381,7 +458,7 @@ class MenuView(arcade.View):
             )
             resp.raise_for_status()
             data = resp.json()
-            self.session_id = data["session_id"]
+            self.session_id = data.get("session_id", "")
             current_xp = data.get("xp", 0)
             level = data.get("level", 1)
             
@@ -430,7 +507,15 @@ class MenuView(arcade.View):
                 self.user_data["xp"] = self.xp_bar.current_xp
                 self.user_data["level"] = self.xp_bar.level
                 
-                auth_system.save_users()
+                try:
+                    auth_system.update_user_data(self._original_username, self.user_data)
+                except Exception:
+                    # fallback para salvar interno
+                    try:
+                        auth_system.save_users()
+                    except Exception:
+                        pass
+
                 print(f"✅ Progresso salvo: {self.player_id} - Nível {self.xp_bar.level}")
                 
             except Exception as e:
@@ -495,9 +580,10 @@ class MenuView(arcade.View):
 
         # Tooltip no hover ATUALIZADO
         if hovered and self.xp_bar:
+            moedas = self.user_data.get("coins", 0) if self.user_data else 0
             arcade.draw_text(
-                f"Clique para ver perfil\nNv.{self.xp_bar.level} - {self.xp_bar.current_xp}/{self.xp_bar.max_xp} XP", 
-                ax, ay - 65, 
+                f"Clique para ver perfil\nNv.{self.xp_bar.level} - {self.xp_bar.current_xp}/{self.xp_bar.max_xp} XP\n{moedas}💰 Moedas", 
+                ax, ay - 80, 
                 arcade_color.WHITE, 10,
                 anchor_x="center", bold=True,
                 multiline=True, width=150
@@ -562,7 +648,7 @@ class MenuView(arcade.View):
             self.save_user_progress()
             
             # Cria e mostra a tela de perfil
-            profile_view = ProfileView()
+            profile_view = ProfileView(menu_view=self)
             self.window.show_view(profile_view)
             return
 
@@ -571,10 +657,8 @@ class MenuView(arcade.View):
             if btn.check_click(x, y):
                 if btn.label == "CAMPAIGN":
                     self._start_campaign()
-                elif btn.label == "MUNDO ABERTO":  # NOVO BOTÃO
-                    self._start_open_world()
-                elif btn.label == "OPTIONS":
-                    self.window.show_view(OptionsView(self))
+                elif btn.label == "LOJA":  # NOVO BOTÃO - LOJA
+                    self._open_shop()
                 elif btn.label == "SAIR":
                     self._sair()
                 return
@@ -583,14 +667,12 @@ class MenuView(arcade.View):
         """Teclas de atalho"""
         if key in (arcade.key.C, arcade.key.ENTER):
             self._start_campaign()
-        elif key == arcade.key.M:  # NOVO ATALHO
-            self._start_open_world()
-        elif key == arcade.key.O:
-            self.window.show_view(OptionsView(self))
+        elif key == arcade.key.L:  # NOVO ATALHO - LOJA
+            self._open_shop()
         elif key == arcade.key.P:
-            # Tecla P agora abre o perfil (em vez de mostrar status)
+            # Tecla P agora abre o perfil
             self.save_user_progress()
-            profile_view = ProfileView()
+            profile_view = ProfileView(menu_view=self)
             self.window.show_view(profile_view)
         elif key == arcade.key.ESCAPE:
             self._sair()
@@ -618,7 +700,10 @@ class MenuView(arcade.View):
                 on_exit_callback=self.save_user_progress
             )
             
+            # Permite que o GameView tenha referência ao Menu para, se necessário,
+            # atribuir estado diretamente antes de voltar
             game_view.previous_menu = self
+
             game_view.setup()
             self.window.show_view(game_view)
             
@@ -628,61 +713,23 @@ class MenuView(arcade.View):
             self.set_status("❌ Erro ao iniciar campanha")
             print(f"Erro em _start_campaign: {e}")
 
-    def _start_open_world(self):
-        """Inicia o mundo aberto"""
+    def _open_shop(self):
+        """Abre a loja do jogo"""
         try:
-            self.set_status("🌍 Iniciando mundo aberto...")
+            self.set_status("🏪 Abrindo loja...")
             self.save_user_progress()
             
+            # Cria e mostra a tela da loja
+            shop_view = ShopView(menu_view=self)
+            self.window.show_view(shop_view)
             
-            
-            
-            
-            print(f"🌍 Mundo aberto iniciado para: {self._original_username}")
+            print(f"🛒 Loja aberta para: {self._original_username}")
             
         except Exception as e:
-            self.set_status("❌ Erro ao iniciar mundo aberto")
-            print(f"Erro em _start_open_world: {e}")
+            self.set_status("❌ Erro ao abrir loja")
+            print(f"Erro em _open_shop: {e}")
 
-
-class OptionsView(arcade.View):
-    """Tela de opções"""
-
-    def __init__(self, parent: MenuView):
-        super().__init__()
-        self.parent = parent
-
-    def on_draw(self):
-        self.clear()
-        
-        arcade.draw_lrbt_rectangle_filled(
-            0, SCREEN_WIDTH, 0, SCREEN_HEIGHT,
-            (0, 0, 50, 200)
-        )
-        
-        arcade.draw_text(
-            "OPÇÕES",
-            SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 80,
-            arcade_color.GOLD, 48,
-            anchor_x="center", anchor_y="center",
-            font_name=BUTTON_FONT, bold=True
-        )
-        
-        arcade.draw_text(
-            "Configurações em desenvolvimento...",
-            SCREEN_WIDTH/2, SCREEN_HEIGHT/2,
-            arcade_color.WHITE, 20,
-            anchor_x="center", anchor_y="center"
-        )
-        
-        arcade.draw_text(
-            "ESC para voltar ao menu",
-            SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 60,
-            arcade_color.LIGHT_GRAY, 16,
-            anchor_x="center", anchor_y="center"
-        )
-
-    def on_key_press(self, key, modifiers):
-        if key == arcade.key.ESCAPE:
-            print("↩️ Voltando para o menu principal...")
-            self.window.show_view(self.parent)
+    def set_status(self, message: str, duration: float = 2.0):
+        """Define mensagem de status temporária."""
+        self.status_message = message
+        self.status_timer = duration

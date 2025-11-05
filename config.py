@@ -6,7 +6,7 @@ import hashlib
 # ===== CONFIGURAÇÕES DE JANELA =====
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
-SCREEN_TITLE = "RPG da Emilly"
+SCREEN_TITLE = "Dungeons of Questions"
 
 # ===== CAMINHOS BASE =====
 BASE_PATH = os.path.dirname(__file__)
