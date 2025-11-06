@@ -46,7 +46,6 @@ Proporcionar uma experiência interativa de aprendizado dos conceitos e funciona
 | 🗺️ **Mapas** | `Tiled TMX` | 1.8+ | Editor de mapas profissional |
 | 🎨 **Assets** | `Pixel Art` | Custom | Sprites e tilesets exclusivos |
 | 🔐 **Autenticação** | `JWT` | Custom | Sistema seguro de login |
-| 📱 **Multiplayer** | `Discord API` | v10+ | Integração com Discord |
 
 </div>
 
@@ -297,7 +296,7 @@ docker run -p 8000:8000 -p 5000:5000 dungeons-of-questions
   <tr>
     <td align="center">
       <a href="https://github.com/ciconha">
-        <img src="https://avatars.githubusercontent.com/u/131923066?v=4" width="80" style="border-radius: 50%;" />
+        <img src="https://avatars.githubusercontent.com/u/131923066?v=4" width="80" height="80" style="border-radius: 50%; object-fit: cover;" />
         <br />
         <sub><b>Ciconha</b></sub>
       </a>
@@ -369,17 +368,10 @@ docker run -p 8000:8000 -p 5000:5000 dungeons-of-questions
 
 ### 🚧 Em Desenvolvimento (v1.1)
 - [ ] 🎪 Mais fases e conteúdos educativos
-- [ ] 🏆 Sistema de conquistas e recompensas
-- [ ] 🔊 Sistema de áudio e efeitos sonoros
-- [ ] 📱 Interface responsiva para mobile
-- [ ] 🌍 Traduções multilíngua
 
 ### 📋 Planejado (v2.0)
 - [ ] 📚 Editor de níveis integrado
 - [ ] 🎮 Modo história expandido
-- [ ] 👥 Multiplayer em tempo real
-- [ ] 📊 Painel de administração
-- [ ] 🔄 Integração com LMS educacional
 
 ## 🤝 Como Contribuir
 
@@ -472,13 +464,6 @@ deste software e arquivos de documentação associados...
 
 <div align="center">
 
-### 📞 Canais de Suporte
-
-[![Discord](https://img.shields.io/badge/💬-Discord_Community-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/your-invite)
-[![Issues](https://img.shields.io/badge/🐛-Reportar_Bugs-FF6B6B?style=for-the-badge&logo=github)](https://github.com/ciconha/Dungeons-of-Questions/issues)
-[![Discussions](https://img.shields.io/badge/💡-Sugestões-27AE60?style=for-the-badge&logo=github)](https://github.com/ciconha/Dungeons-of-Questions/discussions)
-[![Email](https://img.shields.io/badge/📧-Suporte_Email-D14836?style=for-the-badge&logo=gmail)](mailto:support@dungeonsquestions.com)
-
 ### 🌟 Ajude o Projeto
 
 [![GitHub stars](https://img.shields.io/github/stars/ciconha/Dungeons-of-Questions?style=social)](https://github.com/ciconha/Dungeons-of-Questions/stargazers)
@@ -500,11 +485,9 @@ deste software e arquivos de documentação associados...
 **Desenvolvido com ❤️ pela comunidade Dungeons of Questions**
 
 </div>
-```
 
-## 🖼️ Para adicionar imagens reais:
 
-Quando você tiver screenshots, substitua os placeholders por:
+## Caso queira ver alguns Templates do JOGO
 
 <table>
   <tr>
@@ -561,6 +544,22 @@ Quando você tiver screenshots, substitua os placeholders por:
 </table>
 
 
+### Caso queira algo mais simples para jogar o Jogo, nos convidamos você a entrar nas branch e escolher seu Sistema Operacional, pois assim você abaixa em arquivo .ZIP é inicia o jogo.
+
+```
+-Linux
+
+Abaixa a branch Linux é vai até start.sh e clica no botão direito e vai até iniciar software
+
+```
+
+
+```
+-Windows
+
+Abaixa a branch Windows e vai até a pasta DIST e clica em main, nisso vai inicar o jogo 
+
+```
 
 ## ✨ Recursos Incluídos:
 
