@@ -259,11 +259,11 @@ python game/main.py
     <td align="center">
       <a href="https://github.com/ciconha">
         <img src="https://avatars.githubusercontent.com/u/131923066?v=4" width="80" height="80" style="border-radius: 50%; object-fit: cover;" />
-        <br />
+        <br><br>
         <sub><b>Ciconha</b></sub>
       </a>
       <br />
-      <sub>🎯 Full Stack Developer</sub>
+      <sub>⛩️ Back-End & Infraestrutura</sub>
       <br />
       <img src="https://img.shields.io/badge/🔧-Arquitetura_Principal-orange?style=flat-square"/>
       <br />
