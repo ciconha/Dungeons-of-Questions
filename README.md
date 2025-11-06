@@ -15,7 +15,6 @@
 
 [![Demo](https://img.shields.io/badge/🎬-Ver_Demo-orange?style=for-the-badge)](https://github.com/ciconha/Dungeons-of-Questions#-demonstração)
 [![Instalação](https://img.shields.io/badge/⚡-Começar_Jogando-green?style=for-the-badge)](https://github.com/ciconha/Dungeons-of-Questions#-instalação-rápida)
-[![Discord](https://img.shields.io/badge/💬-Discord-7289DA?style=for-the-badge&logo=discord)](https://discord.gg/your-invite-link)
 
 </div>
 
