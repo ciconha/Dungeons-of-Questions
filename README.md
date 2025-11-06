@@ -110,33 +110,6 @@ Dungeons-of-Questions/
 └── 📄 README.md                   # Este Arquivo
 ```
 
-## 🎥 Demonstração Visual
-
-<div align="center">
-
-### 🏠 Sistema de Menu & Autenticação
-| | |
-|:-------------------------:|:-------------------------:|
-| **🎪 Tela de Login** | **🏰 Menu Principal** |
-| ![Login Screen](https://via.placeholder.com/400x250/2C3E50/FFFFFF?text=Login+System+🎪) | ![Main Menu](https://via.placeholder.com/400x250/8E44AD/FFFFFF?text=Main+Menu+🏰) |
-| *Sistema seguro de autenticação* | *Navegação intuitiva estilo RPG* |
-
-### 🎮 Sistema de Gameplay & Quiz
-| | |
-|:-------------------------:|:-------------------------:|
-| **🌍 Exploração do Mapa** | **🧠 Sistema de Quiz** |
-| ![Gameplay](https://via.placeholder.com/400x250/27AE60/FFFFFF?text=Map+Exploration+🌍) | ![Quiz System](https://via.placeholder.com/400x250/2980B9/FFFFFF?text=Quiz+System+🧠) |
-| *Movimentação suave em tempo real* | *Perguntas progressivas sobre Turing* |
-
-### 👤 Sistema de Perfil & Multiplayer
-| | |
-|:-------------------------:|:-------------------------:|
-| **📊 Perfil do Jogador** | **👥 Multiplayer Discord** |
-| ![Player Profile](https://via.placeholder.com/400x250/E67E22/FFFFFF?text=Player+Profile+📊) | ![Multiplayer](https://via.placeholder.com/400x250/3498DB/FFFFFF?text=Discord+Multiplayer+👥) |
-| *Estatísticas detalhadas estilo RPG* | *Integração completa com Discord* |
-
-</div>
-
 ## ⚡ Instalação Rápida - Todos os Sistemas
 
 ### 🐧 Linux (Ubuntu/Debian)
@@ -209,16 +182,6 @@ cp .env.example .env
 
 # 6. Executar
 python game/main.py
-```
-
-### 🐳 Docker (Todos os Sistemas)
-```bash
-# Executar com Docker Compose
-docker-compose up -d
-
-# Ou construir manualmente
-docker build -t dungeons-of-questions .
-docker run -p 8000:8000 -p 5000:5000 dungeons-of-questions
 ```
 
 ## 🎯 Funcionalidades Detalhadas
