@@ -267,13 +267,13 @@ python main.py
 ## 🎯 Funcionalidades Detalhadas
 
 ### 🏰 Sistema Principal de Jogo
-| Funcionalidade | Status | Descrição | Imagem |
+| Funcionalidade | Status | Descrição |
 |----------------|--------|-----------|--------|
-| **Mundo Aberto 2D** | ✅ | Exploração livre em mapa TMX | ![Mapa](https://via.placeholder.com/50/27AE60/FFFFFF?text=🗺️) |
-| **Sistema de Quiz** | ✅ | 6 fases progressivas sobre Turing | ![Quiz](https://via.placeholder.com/50/2980B9/FFFFFF?text=🧠) |
-| **Progressão de XP** | ✅ | Sistema infinito de levels | ![XP](https://via.placeholder.com/50/F39C12/FFFFFF?text=⭐) |
-| **Perfil RPG** | ✅ | Interface medieval personalizável | ![Perfil](https://via.placeholder.com/50/E74C3C/FFFFFF?text=👤) |
-| **Sistema de Fases** | ✅ | Desafios temáticos progressivos | ![Fases](https://via.placeholder.com/50/9B59B6/FFFFFF?text=🎯) |
+| **Mundo Aberto 2D** | ✅ | Exploração livre em mapa TMX |
+| **Sistema de Quiz** | ✅ | 6 fases progressivas sobre Turing | 
+| **Progressão de XP** | ✅ | Sistema infinito de levels | 
+| **Perfil RPG** | ✅ | Interface medieval personalizável | 
+| **Sistema de Fases** | ✅ | Desafios temáticos progressivos  |
 
 ### 👤 Sistema Avançado de Usuário
 | Módulo | Status | Características | Tecnologia |
