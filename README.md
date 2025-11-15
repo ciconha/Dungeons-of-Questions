@@ -268,7 +268,7 @@ python main.py
 
 ### 🏰 Sistema Principal de Jogo
 | Funcionalidade | Status | Descrição |
-|----------------|--------|-----------|--------|
+|----------------|--------|-----------|
 | **Mundo Aberto 2D** | ✅ | Exploração livre em mapa TMX |
 | **Sistema de Quiz** | ✅ | 6 fases progressivas sobre Turing | 
 | **Progressão de XP** | ✅ | Sistema infinito de levels | 
@@ -287,10 +287,9 @@ python main.py
 ### 🎨 Sistema de Interface
 | Componente | Status | Detalhes | Preview |
 |------------|--------|----------|---------|
-| **Menu Principal** | ✅ | Navegação estilo RPG | ![Menu](https://via.placeholder.com/30/8E44AD/FFFFFF?text=🎪) |
-| **HUD In-Game** | ✅ | Informações em tempo real | ![HUD](https://via.placeholder.com/30/27AE60/FFFFFF?text=📊) |
-| **Perfil Medieval** | ✅ | Design único RPG | ![Perfil](https://via.placeholder.com/30/E67E22/FFFFFF?text=🏰) |
-| **Animações** | ✅ | Transições suaves | ![Anim](https://via.placeholder.com/30/3498DB/FFFFFF?text=✨) |
+| **Menu Principal** | ✅ | Navegação estilo RPG | 
+| **HUD In-Game** | ✅ | Informações em tempo real |
+| **Animações** | ✅ | Transições suaves | 
 
 ## 🕹️ Como Jogar - Guia Completo
 
