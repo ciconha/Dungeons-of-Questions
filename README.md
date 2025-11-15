@@ -292,14 +292,14 @@ python main.py
 ## 🕹️ Como Jogar - Guia Completo
 
 ### 🎮 Controles e Navegação
-| Ação | Tecla | Descrição | Ícone |
-|------|-------|-----------|--------|
-| **Movimento** | `WASD` | Navegação fluída pelo mapa | 🎮 |
-| **Interagir** | `ENTER` | Iniciar desafios e quizzes | ⚡ |
-| **Menu** | `ESC` | Voltar/Configurações | ⚙️ |
-| **Perfil** | `P` | Acessar perfil do jogador | 👤 |
-| **Multiplayer** | `M` | Acessar sistema multiplayer | 👥 |
-| **Tela Cheia** | `F11` | Alternar tela cheia | 🖥️ |
+| Ação | Tecla | Descrição |
+|------|-------|-----------|
+| **Movimento** | `WASD` | Navegação fluída pelo mapa | 
+| **Interagir** | `ENTER` | Iniciar desafios e quizzes | 
+| **Menu** | `ESC` | Voltar/Configurações | 
+| **Perfil** | `P` | Acessar perfil do jogador |
+| **Multiplayer** | `M` | Acessar sistema multiplayer |
+| **Tela Cheia** | `F11` | Alternar tela cheia |
 
 ### 📚 Sistema de Progressão
 1. **🎯 Explore o Mapa**
