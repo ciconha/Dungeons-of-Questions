@@ -1,7 +1,7 @@
 
 
 
-# 🎮 Dungeons of Questions - RPG Educativo
+# Dungeons of Questions - RPG Educativo
 
 <div align="center">
 
@@ -11,17 +11,19 @@
 ![Arcade](https://img.shields.io/badge/Arcade_Engine-FF6B6B?style=for-the-badge&logo=arcade)
 ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
 
-**Uma jornada épica através do conhecimento! Explore masmorras, resolva desafios e aprenda conceitos de Ciência da Computação em um RPG imersivo.**
+**Uma jornada épica através do conhecimento! Explore masmorras, resolva desafios e aprenda conceitos de Ciência da Computação em um RPG.**
 
-[![Demo](https://img.shields.io/badge/🎬-Ver_Demo-orange?style=for-the-badge)](https://github.com/ciconha/Dungeons-of-Questions#-demonstração)
-[![Instalação](https://img.shields.io/badge/⚡-Começar_Jogando-green?style=for-the-badge)](https://github.com/ciconha/Dungeons-of-Questions#-instalação-rápida)
-[![Discord](https://img.shields.io/badge/💬-Discord-7289DA?style=for-the-badge&logo=discord)](https://discord.gg/your-invite-link)
+---
+
+### [link do video](https://acadcruzeirodosul-my.sharepoint.com/:v:/g/personal/eduardo_ciconha_cs_brazcubas_edu_br/EVbVybnhDjdLrIjWltZ0AzgBNc-d_fRXg_lCE238KxePdA?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=WfKeWk)
+
+
 
 </div>
 
 ## 🚀 Sobre o Projeto
 
-### 🎯 Objetivo Principal
+### Objetivo Principal
 Proporcionar uma experiência interativa de aprendizado dos conceitos e funcionamento de uma **Máquina de Turing** através de um RPG educativo imersivo. O jogador avança por fases temáticas, respondendo perguntas de dificuldade crescente enquanto acompanha uma história cativante.
 
 ### ✨ Destaques Exclusivos
@@ -46,7 +48,6 @@ Proporcionar uma experiência interativa de aprendizado dos conceitos e funciona
 | 🗺️ **Mapas** | `Tiled TMX` | 1.8+ | Editor de mapas profissional |
 | 🎨 **Assets** | `Pixel Art` | Custom | Sprites e tilesets exclusivos |
 | 🔐 **Autenticação** | `JWT` | Custom | Sistema seguro de login |
-| 📱 **Multiplayer** | `Discord API` | v10+ | Integração com Discord |
 
 </div>
 
@@ -110,33 +111,6 @@ Dungeons-of-Questions/
 ├── 🔧 .env.example                # Variáveis de Ambiente
 └── 📄 README.md                   # Este Arquivo
 ```
-
-## 🎥 Demonstração Visual
-
-<div align="center">
-
-### 🏠 Sistema de Menu & Autenticação
-| | |
-|:-------------------------:|:-------------------------:|
-| **🎪 Tela de Login** | **🏰 Menu Principal** |
-| ![Login Screen](https://via.placeholder.com/400x250/2C3E50/FFFFFF?text=Login+System+🎪) | ![Main Menu](https://via.placeholder.com/400x250/8E44AD/FFFFFF?text=Main+Menu+🏰) |
-| *Sistema seguro de autenticação* | *Navegação intuitiva estilo RPG* |
-
-### 🎮 Sistema de Gameplay & Quiz
-| | |
-|:-------------------------:|:-------------------------:|
-| **🌍 Exploração do Mapa** | **🧠 Sistema de Quiz** |
-| ![Gameplay](https://via.placeholder.com/400x250/27AE60/FFFFFF?text=Map+Exploration+🌍) | ![Quiz System](https://via.placeholder.com/400x250/2980B9/FFFFFF?text=Quiz+System+🧠) |
-| *Movimentação suave em tempo real* | *Perguntas progressivas sobre Turing* |
-
-### 👤 Sistema de Perfil & Multiplayer
-| | |
-|:-------------------------:|:-------------------------:|
-| **📊 Perfil do Jogador** | **👥 Multiplayer Discord** |
-| ![Player Profile](https://via.placeholder.com/400x250/E67E22/FFFFFF?text=Player+Profile+📊) | ![Multiplayer](https://via.placeholder.com/400x250/3498DB/FFFFFF?text=Discord+Multiplayer+👥) |
-| *Estatísticas detalhadas estilo RPG* | *Integração completa com Discord* |
-
-</div>
 
 ## ⚡ Instalação Rápida - Todos os Sistemas
 
@@ -210,16 +184,6 @@ cp .env.example .env
 
 # 6. Executar
 python game/main.py
-```
-
-### 🐳 Docker (Todos os Sistemas)
-```bash
-# Executar com Docker Compose
-docker-compose up -d
-
-# Ou construir manualmente
-docker build -t dungeons-of-questions .
-docker run -p 8000:8000 -p 5000:5000 dungeons-of-questions
 ```
 
 ## 🎯 Funcionalidades Detalhadas
@@ -297,12 +261,12 @@ docker run -p 8000:8000 -p 5000:5000 dungeons-of-questions
   <tr>
     <td align="center">
       <a href="https://github.com/ciconha">
-        <img src="https://avatars.githubusercontent.com/u/131923066?v=4" width="80" style="border-radius: 50%;" />
-        <br />
+        <img src="https://avatars.githubusercontent.com/u/131923066?v=4" width="80" height="80" style="border-radius: 50%; object-fit: cover;" />
+        <br><br>
         <sub><b>Ciconha</b></sub>
       </a>
       <br />
-      <sub>🎯 Full Stack Developer</sub>
+      <sub>⛩️ Back-End & Infraestrutura</sub>
       <br />
       <img src="https://img.shields.io/badge/🔧-Arquitetura_Principal-orange?style=flat-square"/>
       <br />
@@ -369,17 +333,10 @@ docker run -p 8000:8000 -p 5000:5000 dungeons-of-questions
 
 ### 🚧 Em Desenvolvimento (v1.1)
 - [ ] 🎪 Mais fases e conteúdos educativos
-- [ ] 🏆 Sistema de conquistas e recompensas
-- [ ] 🔊 Sistema de áudio e efeitos sonoros
-- [ ] 📱 Interface responsiva para mobile
-- [ ] 🌍 Traduções multilíngua
 
 ### 📋 Planejado (v2.0)
 - [ ] 📚 Editor de níveis integrado
 - [ ] 🎮 Modo história expandido
-- [ ] 👥 Multiplayer em tempo real
-- [ ] 📊 Painel de administração
-- [ ] 🔄 Integração com LMS educacional
 
 ## 🤝 Como Contribuir
 
@@ -472,13 +429,6 @@ deste software e arquivos de documentação associados...
 
 <div align="center">
 
-### 📞 Canais de Suporte
-
-[![Discord](https://img.shields.io/badge/💬-Discord_Community-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/your-invite)
-[![Issues](https://img.shields.io/badge/🐛-Reportar_Bugs-FF6B6B?style=for-the-badge&logo=github)](https://github.com/ciconha/Dungeons-of-Questions/issues)
-[![Discussions](https://img.shields.io/badge/💡-Sugestões-27AE60?style=for-the-badge&logo=github)](https://github.com/ciconha/Dungeons-of-Questions/discussions)
-[![Email](https://img.shields.io/badge/📧-Suporte_Email-D14836?style=for-the-badge&logo=gmail)](mailto:support@dungeonsquestions.com)
-
 ### 🌟 Ajude o Projeto
 
 [![GitHub stars](https://img.shields.io/github/stars/ciconha/Dungeons-of-Questions?style=social)](https://github.com/ciconha/Dungeons-of-Questions/stargazers)
@@ -500,11 +450,9 @@ deste software e arquivos de documentação associados...
 **Desenvolvido com ❤️ pela comunidade Dungeons of Questions**
 
 </div>
-```
 
-## 🖼️ Para adicionar imagens reais:
 
-Quando você tiver screenshots, substitua os placeholders por:
+## Caso queira ver alguns Templates do JOGO
 
 <table>
   <tr>
@@ -561,6 +509,22 @@ Quando você tiver screenshots, substitua os placeholders por:
 </table>
 
 
+### Caso queira algo mais simples para jogar o Jogo, nos convidamos você a entrar nas branch e escolher seu Sistema Operacional, pois assim você abaixa em arquivo .ZIP é inicia o jogo.
+
+```
+-Linux
+
+Abaixa a branch Linux é vai até start.sh e clica no botão direito e vai até iniciar software
+
+```
+
+
+```
+-Windows
+
+Abaixa a branch Windows e vai até a pasta DIST e clica em main, nisso vai inicar o jogo 
+
+```
 
 ## ✨ Recursos Incluídos:
 
