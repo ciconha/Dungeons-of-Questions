@@ -500,28 +500,16 @@ deste software e arquivos de documentação associados...
 ### Caso queira algo mais simples para jogar o Jogo, nos convidamos você a entrar nas branch e escolher seu Sistema Operacional, pois assim você abaixa em arquivo .ZIP é inicia o jogo.
 
 ```
--Linux
+Caso querira algo mais pratico para instalar as dependencias
 
-Abaixa a branch Linux é vai até start.sh e clica no botão direito e vai até iniciar software
+cd verificação
+
+python instalador.py
+
+para instalar todos os pacotes
+
+python verificacao.py
+
+para verificar se todos os pacotes foram instlados
 
 ```
-
-
-```
--Windows
-
-Abaixa a branch Windows e vai até a pasta DIST e clica em main, nisso vai inicar o jogo 
-
-```
-
-## ✨ Recursos Incluídos:
-
-- **🎯 Badges interativas** e profissionais
-- **📊 Arquitetura completa** com estrutura de diretórios
-- **🎮 Guias de instalação** para Windows, Linux, macOS e Docker
-- **👥 Equipe com fotos** e badges de contribuição
-- **🐛 Troubleshooting** para erros comuns
-- **📈 Roadmap visual** detalhado
-- **🤝 Guia de contribuição** com padrões
-- **🎨 Design responsivo** e acessível
-- **📞 Canais de suporte** múltiplos
