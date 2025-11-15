@@ -310,23 +310,17 @@ python main.py
 3. **⭐ Sistema de Recompensas**
    - +10 XP por resposta correta
    - Bônus por sequências corretas
-   - Level Up a cada 1000 XP
+   - Level Up a cada 100 XP
 
 4. **📈 Evolução do Personagem**
    - Desbloqueie novas áreas
    - Acesse fases mais avançadas
-   - Melhore suas estatísticas
 
-5. **🏆 Conquistas**
-   - Complete todas as 6 fases
-   - Domine os conceitos de Turing
-   - Torne-se um Mestre do Conhecimento!
-
-## 👥 Equipe de Desenvolvimento
+## 👥 Equipe 
 
 <div align="center">
 
-### 🎮 Desenvolvedores Principais
+### 🎮 Desenvolvedores 
 
 <table>
   <tr>
