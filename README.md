@@ -573,9 +573,6 @@ deste software e arquivos de documentação associados...
     </td>
 </table>
 
-
-### Caso queira algo mais simples para jogar o Jogo, nos convidamos você a entrar nas branch e escolher seu Sistema Operacional, pois assim você abaixa em arquivo .ZIP é inicia o jogo.
-
 ```
 Caso querira algo mais pratico para instalar as dependencias
 
