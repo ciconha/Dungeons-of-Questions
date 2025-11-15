@@ -283,8 +283,8 @@ python main.py
 | **Backup** | ✅ | Fallback local/cloud | `JSON` + `MongoDB` |
 
 ### 🎨 Sistema de Interface
-| Componente | Status | Detalhes | Preview |
-|------------|--------|----------|---------|
+| Componente | Status | Detalhes |
+|------------|--------|----------|
 | **Menu Principal** | ✅ | Navegação estilo RPG | 
 | **HUD In-Game** | ✅ | Informações em tempo real |
 | **Animações** | ✅ | Transições suaves | 
