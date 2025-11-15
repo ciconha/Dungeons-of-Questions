@@ -17,7 +17,7 @@
 
 ### link do video
 
-lindo do video()
+
 
 </div>
 
