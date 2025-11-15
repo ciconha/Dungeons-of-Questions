@@ -197,8 +197,6 @@ Dungeons-of-Questions/
 │   ├── api/                       # Documentação da API
 │   └── setup/                     # Guias de Instalação
 ├── 📋 requirements.txt            # Dependências Python
-├── 🐳 docker-compose.yml          # Orquestração Docker
-├── 🔧 .env.example                # Variáveis de Ambiente
 └── 📄 README.md                   # Este Arquivo
 ```
 
