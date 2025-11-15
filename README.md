@@ -121,9 +121,7 @@ Proporcionar uma experiência interativa de aprendizado dos conceitos e funciona
 - 🧠 **Aprendizado Progressivo**: Conceitos de computação de forma gradual e divertida
 - 🎪 **Sistema de XP Avançado**: Evolua seu personagem com conhecimento
 - 👥 **Perfil Personalizado RPG**: Interface estilo medieval
-- 🎨 **Pixel Art Profissional**: Visual retro encantador
-- 🌐 **Multiplayer Integrado**: Conecte com amigos via Discord
-- 💾 **Sistema de Salvamento**: MongoDB + Autenticação segura
+- 💾 **Sistema de Salvamento**: MongoDB + Autenticação 
 
 ## 🛠️ Stack Tecnológica Completa
 
