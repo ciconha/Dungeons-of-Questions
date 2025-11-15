@@ -1,7 +1,7 @@
 
 
 
-# 🎮 Dungeons of Questions - RPG Educativo
+# Dungeons of Questions - RPG Educativo
 
 <div align="center">
 
@@ -13,6 +13,11 @@
 
 **Uma jornada épica através do conhecimento! Explore masmorras, resolva desafios e aprenda conceitos de Ciência da Computação em um RPG.**
 
+---
+
+###link do video
+
+lindo do video()
 
 </div>
 
