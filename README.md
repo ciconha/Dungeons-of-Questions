@@ -141,8 +141,8 @@ Proporcionar uma experiência interativa de aprendizado dos conceitos e funciona
 
 ```
 Dungeons-of-Questions/
-├── 🎮 game/                          # Cliente Principal do Jogo
-│   ├── 🗺️ assets/                    # Recursos Visuais
+├── 🎮 game/                          
+│   ├── 🗺️ assets/                 
 │   │   ├── characters/              # Sprites dos Personagens
 │   │   │   ├── Emillywhite_front.png
 │   │   │   ├── Emillywhite_back.png
