@@ -11,7 +11,7 @@
 ![Arcade](https://img.shields.io/badge/Arcade_Engine-FF6B6B?style=for-the-badge&logo=arcade)
 ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
 
-**Uma jornada épica através do conhecimento! Explore masmorras, resolva desafios e aprenda conceitos de Ciência da Computação em um RPG imersivo.**
+**Uma jornada épica através do conhecimento! Explore masmorras, resolva desafios e aprenda conceitos de Ciência da Computação em um RPG.**
 
 
 </div>
