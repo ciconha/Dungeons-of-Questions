@@ -43,8 +43,8 @@
       "fase_atual": 3,
       "fases": {
         "1": "liberada",
-        "2": "liberada",
-        "3": "liberada",
+        "2": "bloqueada",
+        "3": "bloqueada",
         "4": "bloqueada",
         "5": "bloqueada",
         "6": "bloqueada"
@@ -57,9 +57,9 @@
     "last_login": "2025-11-14T21:56:48.871440",
     "created_at": "2025-11-14T21:56:48.871446",
     "item_usage": {
-      "weapon_sword": 10,
+      "weapon_sword": 8,
       "weapon_staff": 16,
-      "potion_mana": 2,
+      "potion_mana": 1,
       "skill_focus": 1
     },
     "quiz_state": {
@@ -79,7 +79,7 @@
     },
     "lives": 4,
     "max_lives": 4,
-    "mana": 1,
+    "mana": 3,
     "max_mana": 5,
     "used_items_phase": [
       "2"
@@ -102,26 +102,19 @@
         "correct_answers": 0,
         "wrong_answers": 0,
         "total_xp": 0,
-        "timestamp": 1763220993.2465482
-      },
-      "phase_2": {
-        "correct_answers": 0,
-        "wrong_answers": 0,
-        "total_xp": 0,
-        "timestamp": 1763220998.2631853
+        "timestamp": 1763176199.1486645
       }
-    },
-    "max_phase": 1
+    }
   },
   "eduardo": {
     "nome": "edu",
     "password": "123456",
     "avatar_path": null,
     "avatar_url": "/home/miller/Documentos/Projetos Curriculo/rpg/jogo/game/assets/avatars/png-transparent-meliodas-the-seven-deadly-sins-anime-anime-cartoon-fictional-character-seven-deadly-sins-thumbnail.png",
-    "xp": 20,
+    "xp": 0,
     "level": 1,
     "max_xp": 100,
-    "coins": 100,
+    "coins": 25,
     "inventory": {
       "potion_health": 1,
       "potion_mana": 1,
@@ -152,18 +145,8 @@
       "total_xp_earned_session": 0,
       "last_save": "2025-11-15T15:54:37.404383"
     },
-    "quiz_progress": {
-      "phase_1": {
-        "correct_answers": 0,
-        "wrong_answers": 0,
-        "total_xp": 0,
-        "timestamp": 1763233074.8181665
-      }
-    },
-    "item_usage": {
-      "weapon_sword": 1,
-      "potion_health": 1
-    },
+    "quiz_progress": {},
+    "item_usage": {},
     "session_stats": {},
     "created_at": "2025-11-15T15:54:37.404296",
     "last_login": "2025-11-15T15:54:37.404367",
@@ -182,12 +165,10 @@
     },
     "campaign_progress": {
       "fase_atual": 1,
-      "fases_concluidas": [
-        1
-      ],
+      "fases_concluidas": [],
       "fases": {
-        "1": "concluida",
-        "2": "liberada",
+        "1": "liberada",
+        "2": "bloqueada",
         "3": "bloqueada",
         "4": "bloqueada",
         "5": "bloqueada",

@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 from api.db.mongo import mongo
 from api.routers.root           import router as root_router
 from api.routers.health         import router as health_router
-from api.routers.quiz_generator import router as quiz_router
+from api.routers.quiz import router as quiz_router
 from api.routers.web_scraper    import router as scraper_router
 from api.routers.favicon        import router as favicon_router
 from api.routers.game_session   import router as game_router

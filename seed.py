@@ -215,19 +215,17 @@ def run():
         }
     ]
 
-    print("🔄 Seed: conectando ao MongoDB…")
-    if not mongo.connect():
-        print("❌ Seed abortado: falha na conexão.")
-        return
-
-    print("🗑 Seed: limpando coleção 'quiz'…")
-    mongo.db["quiz"].delete_many({})
-
-    for q in quizzes:
-        print(f"➕ Seed: inserindo fase {q['phase']} - {q['question']}")
-        res = mongo.insert("quiz", q, use_uuid=True)
-        if not res.get("success"):
-            print("❌ Seed: erro ao inserir:", res.get("error"))
+    print("\n🔍 Verificando dados inseridos...")
+    for phase in range(1, 4):
+        questions = list(mongo.db["quiz"].find({"phase": phase}))
+        print(f"Fase {phase}: {len(questions)} perguntas")
+        if questions:
+            first_q = questions[0]
+            print(f"  Campos: {list(first_q.keys())}")
+            if 'example' in first_q:
+                print(f"  ✅ Tem exemplo: {first_q['example'][:50]}...")
+            else:
+                print("  ❌ SEM EXEMPLO!")
 
     mongo.disconnect()
-    print("✅ Seed finalizado com exemplos educativos!")
+    print("✅ Seed finalizado com TODOS os exemplos!")

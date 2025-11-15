@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Optional
 from api.db.mongo import mongo
 
 router = APIRouter(tags=["Quiz"])
@@ -16,6 +16,7 @@ class Question(BaseModel):
     question: str
     options: List[str]
     answer: str
+    example: Optional[str] = None  # ← ADICIONADO campo example
 
 class QuestionCreate(BaseModel):
     """
@@ -25,6 +26,7 @@ class QuestionCreate(BaseModel):
     question: str
     options: List[str]
     answer: str
+    example: Optional[str] = None  # ← ADICIONADO campo example
 
 @router.get(
     "/quiz/{phase}",
@@ -33,11 +35,24 @@ class QuestionCreate(BaseModel):
     description="Retorna todas as questões cadastradas para a fase indicada"
 )
 def get_quiz(phase: int):
+    # Busca TODOS os campos incluindo 'example'
     res = mongo.find("quiz", {"phase": phase})
     if not res["success"]:
         raise HTTPException(status_code=500, detail=res["error"])
-    # Se não houver nenhum documento para essa fase, devolve lista vazia
-    return res["data"]
+    
+    # Log para debug
+    questions = res["data"]
+    print(f"🔍 API: Retornando {len(questions)} perguntas para fase {phase}")
+    if questions:
+        first_question = questions[0]
+        print(f"🔍 API: Primeira pergunta - {first_question.get('question', '')[:50]}...")
+        print(f"🔍 API: Campos disponíveis: {list(first_question.keys())}")
+        if 'example' in first_question:
+            print(f"✅ API: Campo 'example' encontrado: {first_question['example'][:100]}...")
+        else:
+            print("❌ API: Campo 'example' NÃO encontrado!")
+    
+    return questions
 
 @router.post(
     "/quiz",
