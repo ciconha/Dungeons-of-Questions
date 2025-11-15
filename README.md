@@ -13,14 +13,12 @@
 
 **Uma jornada épica através do conhecimento! Explore masmorras, resolva desafios e aprenda conceitos de Ciência da Computação em um RPG imersivo.**
 
-[![Demo](https://img.shields.io/badge/🎬-Ver_Demo-orange?style=for-the-badge)](https://github.com/ciconha/Dungeons-of-Questions#-demonstração)
-[![Instalação](https://img.shields.io/badge/⚡-Começar_Jogando-green?style=for-the-badge)](https://github.com/ciconha/Dungeons-of-Questions#-instalação-rápida)
 
 </div>
 
 ## 🚀 Sobre o Projeto
 
-### 🎯 Objetivo Principal
+### Objetivo Principal
 Proporcionar uma experiência interativa de aprendizado dos conceitos e funcionamento de uma **Máquina de Turing** através de um RPG educativo imersivo. O jogador avança por fases temáticas, respondendo perguntas de dificuldade crescente enquanto acompanha uma história cativante.
 
 ### ✨ Destaques Exclusivos
