@@ -131,12 +131,8 @@ source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# 5. Configure variáveis de ambiente
-cp .env.example .env
-# Edite .env com suas configurações
-
-# 6. Execute o jogo
-python game/main.py
+# 5. Execute o jogo
+python main.py
 ```
 
 ### 🪟 Windows 10/11
@@ -153,12 +149,8 @@ venv\Scripts\activate
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# 4. Configuração
-copy .env.example .env
-# Edite o arquivo .env com suas configurações
-
-# 5. Executar o jogo
-python game/main.py
+# 4. Executar o jogo
+python main.py
 ```
 
 ### 🍎 macOS
@@ -178,12 +170,8 @@ source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# 5. Configuração
-cp .env.example .env
-# Configure o .env
-
-# 6. Executar
-python game/main.py
+# 4. Executar
+python main.py
 ```
 
 ## 🎯 Funcionalidades Detalhadas
@@ -237,7 +225,7 @@ python game/main.py
    - Dificuldade progressiva por fase
 
 3. **⭐ Sistema de Recompensas**
-   - +100 XP por resposta correta
+   - +10 XP por resposta correta
    - Bônus por sequências corretas
    - Level Up a cada 1000 XP
 
