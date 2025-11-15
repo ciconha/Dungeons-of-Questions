@@ -17,6 +17,96 @@
 
 ### [link do video](https://acadcruzeirodosul-my.sharepoint.com/:v:/g/personal/eduardo_ciconha_cs_brazcubas_edu_br/EVbVybnhDjdLrIjWltZ0AzgBNc-d_fRXg_lCE238KxePdA?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=WfKeWk)
 
+---
+
+<table>
+  <tr>
+    <td style="vertical-align: top; padding: 10px;">
+      <details>
+        <summary><strong>relatorio_pedagógico.md</strong></summary>
+         <p>
+            <br>
+              📘 Relatório Pedagógico do Plugin Gamificado
+
+## 1. Identificação do Plugin
+- **Nome do jogo:** Dungeons of Questions  
+- **Plugin:** Arcade  
+
+### Área da disciplina
+O jogo se encaixa nas áreas de **Fundamentos de Computação, Análise de Algoritmos e Modelos Computacionais**.  
+Ele não só aborda conceitos básicos de computabilidade, complexidade e lógica de algoritmos, mas também transforma esses conteúdos em desafios práticos dentro do jogo.  
+Assim, o aluno consegue **experimentar a teoria de forma interativa**, vendo como ideias como máquinas de Turing, problemas decidíveis e análise de desempenho aparecem em situações de jogo e ajudam a avançar de fase.
+
+### Grupo
+- **Grupo 2**  
+- **Integrantes:**  
+- Eduardo Ciconha | RGM: 33352844  
+- Guilherme Ribeiro | RGM: 3860858  
+- Mariana de Sousa | RGM: 34030701  
+
+---
+
+## 2. Objetivo Pedagógico
+O jogo ajuda o aluno a praticar conceitos de **computação teórica** como:
+- Máquinas de Turing  
+- Problemas decidíveis e indecidíveis  
+- Notação assintótica  
+- P vs NP  
+
+Ao jogar, o aluno aprende de forma prática, respondendo perguntas e usando itens que dão dicas, o que reforça o conteúdo da disciplina.
+
+---
+
+## 3. Descrição do Jogo
+- O jogador entra em uma fase com perguntas de múltipla escolha.  
+- Ele tem **vidas e mana**: errar tira vidas, usar habilidades consome mana.  
+- Acertar dá **XP e moedas**, que podem ser usadas para comprar itens na loja.  
+- Se acertar pelo menos **3 perguntas**, passa de fase.  
+- O feedback vem em forma de mensagens na tela (acerto, erro, dicas, exemplos ilustrativos) e no resultado final (XP, moedas, aprovação ou reprovação da fase).  
+
+---
+
+## 4. Conteúdo Relacionado à Disciplina
+Os tópicos do plano de ensino que aparecem no jogo são:
+- **Máquinas de Turing** (explicação e exemplos)  
+- **Problema da Parada** (decidível)  
+- **Classes P e NP** (diferença entre resolver e verificar)  
+- **Notação Big-O** (complexidade de algoritmos)  
+
+O jogo ajuda porque cada pergunta vem com um **exemplo ilustrativo** que conecta a teoria com situações práticas, facilitando a compreensão.
+
+---
+
+## 5. Critérios de Pontuação
+- Cada resposta correta dá **10 XP** (ou **20 XP** quando ativa o exemplo e acerta).  
+- Passa de fase se tiver **3 acertos ou mais**.  
+- Ganha **moedas extras** ao completar a fase.  
+
+### Penalidades
+- Errar tira vidas.  
+- Usar habilidades consome mana.  
+- Se perder todas as vidas, a fase é reprovada.  
+
+---
+
+## 6. Testes Realizados
+Casos de teste planejados:
+- Jogador acerta todas as perguntas → deve ganhar XP máximo e moedas.  
+- Jogador erra todas → perde todas as vidas e reprova a fase.  
+- Jogador usa habilidades sem mana → deve aparecer mensagem de erro.  
+- Jogador repete a fase com o mesmo seed → perguntas devem ser consistentes.  
+- Jogador acerta 3 → passa de fase.  
+
+---
+
+## 7. Roteiro de Demonstração
+- **Cenário feliz:** mostrar o jogo rodando, o aluno respondendo corretamente, usando uma habilidade (exemplo aparece), passando de fase e recebendo XP e moedas.  
+- **Cenário de erro:** mostrar o aluno errando várias vezes, perdendo vidas, usando habilidade sem mana (mensagem de erro aparece), e no final reprovando a fase.  
+
+  </p>
+      </details>
+    </td>
+</table>
 
 
 </div>
