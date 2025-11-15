@@ -15,7 +15,7 @@
 
 ---
 
-### link do video
+### [link do video](https://acadcruzeirodosul-my.sharepoint.com/:v:/g/personal/eduardo_ciconha_cs_brazcubas_edu_br/EVbVybnhDjdLrIjWltZ0AzgBNc-d_fRXg_lCE238KxePdA?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=WfKeWk)
 
 
 
