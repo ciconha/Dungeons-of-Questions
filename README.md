@@ -260,7 +260,7 @@ source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# 4. Executar
+# 5. Executar
 python main.py
 ```
 
