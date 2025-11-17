@@ -39,7 +39,7 @@ Assim, o aluno consegue **experimentar a teoria de forma interativa**, vendo com
 - **Grupo 2**  
 - **Integrantes:**  
 - Eduardo Ciconha | RGM: 33352844  
-- Guilherme Ribeiro | RGM: 3860858  
+- Guilherme Ribeiro | RGM: 33860858  
 - Mariana de Sousa | RGM: 34030701  
 
 ---
