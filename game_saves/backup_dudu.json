@@ -3,12 +3,12 @@
   "password": "123456",
   "avatar_path": null,
   "avatar_url": "/home/miller/Documentos/Projetos Curriculo/rpg/jogo/game/assets/avatars/png-transparent-meliodas-the-seven-deadly-sins-infant-child-nanatsu-no-taizai-child-english-manga-thumbnail.png",
-  "xp": 190,
+  "xp": 170,
   "level": 2,
   "max_xp": 100,
-  "coins": 100,
+  "coins": 130,
   "inventory": {
-    "potion_mana": 1,
+    "potion_mana": 3,
     "weapon_sword": 2
   },
   "equipped_items": {},
@@ -21,6 +21,8 @@
   "hotbar": {
     "1": "weapon_sword",
     "2": "weapon_staff",
+    "3": "potion_mana",
+    "4": "potion_mana",
     "A": "potion_health",
     "B": "potion_mana",
     "C": "skill_focus"
@@ -39,26 +41,25 @@
     }
   },
   "campaign_progress": {
-    "fase_atual": 3,
+    "fase_atual": 2,
     "fases": {
       "1": "concluida",
-      "2": "concluida",
-      "3": "liberada",
+      "2": "liberada",
+      "3": "bloqueada",
       "4": "bloqueada",
       "5": "bloqueada",
       "6": "bloqueada"
     },
     "fases_concluidas": [
-      1,
-      2
+      1
     ]
   },
   "last_login": "2025-11-14T21:56:48.871440",
   "created_at": "2025-11-14T21:56:48.871446",
   "item_usage": {
-    "weapon_sword": 10,
-    "weapon_staff": 16,
-    "potion_mana": 2,
+    "weapon_sword": 11,
+    "weapon_staff": 27,
+    "potion_mana": 14,
     "skill_focus": 1
   },
   "quiz_state": {
@@ -81,6 +82,7 @@
   "mana": 1,
   "max_mana": 5,
   "used_items_phase": [
+    "B",
     "2"
   ],
   "active_effects": {
@@ -91,17 +93,18 @@
   },
   "session_stats": {
     "last_phase": 1,
-    "correct_answers_session": 0,
+    "correct_answers_session": 3,
     "wrong_answers_session": 0,
-    "total_xp_earned_session": 0,
-    "timestamp": 1763174561.599333
+    "total_xp_earned_session": 70,
+    "timestamp": 1763386448.3744242
   },
   "quiz_progress": {
     "phase_1": {
-      "correct_answers": 0,
+      "completed": true,
+      "correct_answers": 3,
       "wrong_answers": 0,
-      "total_xp": 0,
-      "timestamp": 1763220993.2465482
+      "total_xp": 70,
+      "timestamp": 1763386449.8688328
     },
     "phase_2": {
       "correct_answers": 0,

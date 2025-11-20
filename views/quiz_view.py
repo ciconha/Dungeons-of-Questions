@@ -12,7 +12,6 @@ from assets.xp.xp import XPBar
 from auth.simple_auth import auth_system
 from auth.user_manager import user_manager
 
-
 @dataclass
 class ParticleConfig:
     COUNT: int = 15
@@ -21,7 +20,6 @@ class ParticleConfig:
     SPEED_RANGE_Y: Tuple[float, float] = (50.0, 150.0)
     LIFETIME: float = 1.0
     GRAVITY: float = -30.0
-
 
 class ParticleSystem:
     class Particle:
@@ -63,7 +61,6 @@ class ParticleSystem:
     def draw(self):
         for p in self.particles:
             p.draw()
-
 
 class FloatingText:
     def __init__(self, text: str, x: float, y: float, color=(255, 215, 0), effect_type="normal"):
@@ -124,7 +121,6 @@ class FloatingText:
             font_name="Arial"
         )
 
-
 class UserInventoryManager:
     ITEM_TYPES = {
         "weapon_sword": {"name": "Espada do Conhecimento", "type": "weapon", "icon": "⚔️", "mana_cost": 2, "description": "Dobra o XP ganho por resposta correta"},
@@ -155,12 +151,12 @@ class UserInventoryManager:
 
     @classmethod
     def get_default_hotbar(cls):
-        # Hotbar completamente vazio por padrão
         return {
-            '1': None, '2': None, '3': None, '4': None, '5': None, '6': None, '7': None, '8': None,
-            'A': None, 'B': None, 'C': None, 'D': None, 'E': None, 'F': None, 'G': None
+            '1': 'weapon_sword',
+            '2': 'weapon_staff',
+            '3': None, '4': None, '5': None, '6': None, '7': None, '8': None,
+            'A': 'potion_health', 'B': 'potion_mana', 'C': 'skill_focus', 'D': None, 'E': None, 'F': None, 'G': None
         }
-
 
 class ExampleView(arcade.View):
     def __init__(self, example_text: str, parent_view: arcade.View):
@@ -195,15 +191,15 @@ class ExampleView(arcade.View):
         arcade.draw_text(
             "💡 EXEMPLO ILUSTRATIVO",
             panel_x, panel_y + panel_height / 2 - 50,
-            (25, 21, 0), 7,
+            (25, 21, 0), 28,
             anchor_x="center", bold=True
         )
 
         arcade.draw_text(
             self.example_text,
             panel_x, panel_y,
-            (200, 200, 200), 9,
-            width=int(panel_width) - 11,
+            (200, 200, 200), 16,
+            width=int(panel_width) - 24,
             align="center",
             anchor_x="center",
             anchor_y="center"
@@ -263,7 +259,6 @@ class ExampleView(arcade.View):
 
     def on_resize(self, width, height):
         self.window.set_viewport(0, width, 0, height)
-
 
 class QuizResultView(arcade.View):
     def __init__(self, phase: int, correct_answers: int, wrong_answers: int, xp_earned: int,
@@ -410,7 +405,6 @@ class QuizResultView(arcade.View):
     def on_resize(self, width, height):
         self.window.set_viewport(0, width, 0, height)
 
-
 class QuizView(arcade.View):
     COLORS = {
         "background": (30, 30, 30),
@@ -434,22 +428,26 @@ class QuizView(arcade.View):
         self.session_id = session_id
         self.parent = parent
 
-        # Inicializar com valores padrão
+        # gameplay state
         self.max_lives = 4
+        self.lives = self.max_lives
         self.max_mana = 5
-        self.xp_per_correct = 10
+        self.mana = self.max_mana
+        # base xp (used as multiplier logic removed; we'll give discrete values 10 or 30)
+        self.xp_base_when_effect = 10
+        self.xp_base_when_no_effect = 30
 
-        # Carregar estado do usuário
-        self._load_user_state()
-
-        # Hotbar slots - sempre começar vazio
-        self.hotbar_slots = UserInventoryManager.get_default_hotbar()
+        # hotbar
+        self.hotbar_slots = {k: None for k in
+                             ['1', '2', '3', '4', '5', '6', '7', '8',
+                              'A', 'B', 'C', 'D', 'E', 'F', 'G']}
 
         self.correct_answers = 0
         self.wrong_answers = 0
         self.total_xp_earned = 0
 
         self.used_items = set()
+        # only weapon/skill uses set these flags; potions do not set effects
         self.active_effects = {"double_xp": False, "reveal_letter": False, "remove_wrong": False, "extra_time": False}
 
         self.questions: List[Dict] = []
@@ -464,84 +462,9 @@ class QuizView(arcade.View):
         self.background = None
 
         self._load_assets()
+        self.load_user_stats()
         self._load_hotbar_from_user()
         self._setup_ui()
-        
-        
-
-    def _load_user_state(self):
-        """Carrega o estado do usuário do JSON"""
-        try:
-            user = user_manager.get_current_user()
-            if not user:
-                # Valores padrão se não houver usuário
-                self.lives = self.max_lives
-                self.mana = self.max_mana
-                return
-
-            user_data = auth_system.get_user_data(user) or {}
-            
-            # Carregar vida e mana salvas
-            self.lives = user_data.get("lives", self.max_lives)
-            self.mana = user_data.get("mana", self.max_mana)
-            
-            # Garantir que não excedam os máximos
-            self.lives = min(self.lives, self.max_lives)
-            self.mana = min(self.mana, self.max_mana)
-            
-            # Carregar outros dados
-            self.max_phase_unlocked = user_data.get("max_phase", 1)
-            self.item_usage_stats = user_data.get("item_usage", {})
-            
-            print(f"✅ Estado carregado: {self.lives}v/{self.mana}m")
-
-        except Exception as e:
-            print("❌ Erro ao carregar estado do usuário:", e)
-            # Fallback para valores padrão
-            self.lives = self.max_lives
-            self.mana = self.max_mana
-
-    def _save_user_state(self):
-        """Salva o estado atual do usuário no JSON"""
-        try:
-            user = user_manager.get_current_user()
-            if not user:
-                return
-
-            user_data = auth_system.get_user_data(user) or {}
-            
-            # Salvar estado atual
-            user_data["lives"] = self.lives
-            user_data["mana"] = self.mana
-            user_data["max_lives"] = self.max_lives
-            user_data["max_mana"] = self.max_mana
-            
-            # Salvar hotbar
-            user_data["hotbar"] = {slot: item_id for slot, item_id in self.hotbar_slots.items() if item_id}
-            
-            # Salvar progresso da fase atual
-            if "quiz_progress" not in user_data:
-                user_data["quiz_progress"] = {}
-            
-            phase_key = f"phase_{self.phase}"
-            user_data["quiz_progress"][phase_key] = {
-                "correct_answers": self.correct_answers,
-                "wrong_answers": self.wrong_answers,
-                "total_xp": self.total_xp_earned,
-                "timestamp": time.time()
-            }
-            
-            # Atualizar fase máxima se necessário
-            current_max_phase = user_data.get("max_phase", 0)
-            if self.phase > current_max_phase:
-                user_data["max_phase"] = self.phase
-            
-            # Salvar no sistema de autenticação
-            auth_system.update_user_data(user, user_data)
-            print(f"💾 Estado salvo: {self.lives}v/{self.mana}m")
-
-        except Exception as e:
-            print("❌ Erro ao salvar estado do usuário:", e)
 
     def _load_assets(self):
         try:
@@ -549,49 +472,59 @@ class QuizView(arcade.View):
         except Exception:
             self.background = None
 
+    def load_user_stats(self):
+        try:
+            user = user_manager.get_current_user()
+            if not user:
+                return
+            user_data = auth_system.get_user_data(user) or {}
+            self.max_phase_unlocked = user_data.get("max_phase", 1)
+            self.item_usage_stats = user_data.get("item_usage", {})
+            # restore lives/mana if saved
+            self.lives = min(self.max_lives, user_data.get("lives", self.lives))
+            self.mana = min(self.max_mana, user_data.get("mana", self.mana))
+        except Exception as e:
+            print("❌ Erro ao carregar estatísticas:", e)
+
     def _load_hotbar_from_user(self):
-        """Carrega a hotbar do perfil do usuário"""
         try:
             user = user_manager.get_current_user()
             if not user:
                 self.hotbar_slots = UserInventoryManager.get_default_hotbar()
                 return
-
             user_data = auth_system.get_user_data(user) or {}
             hotbar_data = user_data.get("hotbar", {})
-            
-            # Aplicar hotbar salva, mantendo slots vazios para None
+            # keep default mapping keys and fill from saved
             for slot in self.hotbar_slots:
                 if slot in hotbar_data and hotbar_data[slot] in UserInventoryManager.ITEM_TYPES:
                     self.hotbar_slots[slot] = hotbar_data[slot]
                 else:
                     self.hotbar_slots[slot] = None
 
-            print("🎒 Hotbar carregada do perfil")
-
+            # if completely empty, apply defaults
+            if not any(self.hotbar_slots.values()):
+                defaults = UserInventoryManager.get_default_hotbar()
+                for s, it in defaults.items():
+                    if s in self.hotbar_slots:
+                        self.hotbar_slots[s] = it
+                self._save_hotbar_to_profile()
         except Exception as e:
             print("⚠️ Erro ao carregar hotbar:", e)
             self.hotbar_slots = UserInventoryManager.get_default_hotbar()
 
     def _save_hotbar_to_profile(self):
-        """Salva a hotbar atual no perfil do usuário"""
         try:
             user = user_manager.get_current_user()
             if not user:
                 return
-
             user_data = auth_system.get_user_data(user) or {}
-            hotbar_to_save = {slot: item_id for slot, item_id in self.hotbar_slots.items() if item_id}
+            hotbar_to_save = {s: i for s, i in self.hotbar_slots.items() if i}
             user_data["hotbar"] = hotbar_to_save
             auth_system.update_user_data(user, user_data)
-            
-            print("💾 Hotbar salva no perfil")
-
         except Exception as e:
             print("❌ Erro ao salvar hotbar:", e)
 
     def _setup_ui(self):
-        # Placeholder para UI widgets se necessário
         pass
 
     def _sync_xp_to_server(self, added_xp: int):
@@ -626,17 +559,15 @@ class QuizView(arcade.View):
             self.setup()
 
     def setup(self):
-        """Configura o quiz - chamado ao iniciar ou reiniciar"""
         try:
             resp = requests.get(f"http://127.0.0.1:8000/api/quiz/{self.phase}", timeout=5)
             resp.raise_for_status()
             data = resp.json()
             if not isinstance(data, list) or not data:
                 return self._return_to_map()
-            
             self.questions = data
             self.current = 0
-            # NÃO resetar lives/mana - manter estado salvo
+            # reset session counters but keep saved lives/mana
             self.correct_answers = 0
             self.wrong_answers = 0
             self.total_xp_earned = 0
@@ -644,38 +575,27 @@ class QuizView(arcade.View):
             self.active_effects = {k: False for k in self.active_effects}
             self.floating_texts.clear()
             self.particle_system.particles.clear()
-            
             self._build_option_boxes()
-            print("🎮 Quiz configurado - estado mantido")
-
         except Exception as e:
             print("❌ Erro ao carregar perguntas:", e)
             return self._return_to_map()
 
     def _return_to_map(self):
         try:
-            # Salvar estado antes de sair
-            self._save_user_state()
-            
             if hasattr(self.parent, '_completar_fase'):
                 self.parent._completar_fase(self.phase)
             else:
                 if hasattr(self.parent, 'setup'):
                     self.parent.setup()
             self.window.show_view(self.parent)
-        except Exception as e:
-            print("❌ Erro ao retornar ao mapa:", e)
+        except Exception:
+            pass
 
     def _show_result_screen(self):
-        """Mostra tela de resultados e salva progresso"""
         coins_earned = 10 if self.correct_answers >= 3 else 0
-        
-        # Salvar progresso final
-        self._save_user_state()
-        
+        self._save_phase_progress()
         if coins_earned > 0:
             self._save_coins_to_user(coins_earned)
-
         result_view = QuizResultView(
             phase=self.phase,
             correct_answers=self.correct_answers,
@@ -686,16 +606,32 @@ class QuizView(arcade.View):
         )
         self.window.show_view(result_view)
 
-    def avancar_fase(self):
+    def _save_phase_progress(self):
         try:
-            if hasattr(self.parent, 'avancar_fase'):
-                self.parent.avancar_fase()
+            user = user_manager.get_current_user()
+            if not user:
+                return
+            user_data = auth_system.get_user_data(user) or {}
+            if "quiz_progress" not in user_data:
+                user_data["quiz_progress"] = {}
+            phase_key = f"phase_{self.phase}"
+            user_data["quiz_progress"][phase_key] = {
+                "completed": self.correct_answers >= 3,
+                "correct_answers": self.correct_answers,
+                "wrong_answers": self.wrong_answers,
+                "total_xp": self.total_xp_earned,
+                "timestamp": time.time()
+            }
+            current_max_phase = user_data.get("max_phase", 0)
+            if self.phase > current_max_phase:
+                user_data["max_phase"] = self.phase
+            auth_system.update_user_data(user, user_data)
         except Exception as e:
-            print("❌ Erro ao avançar fase:", e)
+            print("❌ Erro ao salvar progresso:", e)
 
     def _build_option_boxes(self):
         self.option_boxes.clear()
-        if not self.questions:
+        if not self.questions or not (0 <= self.current < len(self.questions)):
             return
         w = self.window.width * 0.8
         h = 150
@@ -781,11 +717,9 @@ class QuizView(arcade.View):
                 arcade.draw_circle_outline(x, y, circle_radius, (100, 180, 255), 2)
 
     def _draw_hotbar(self):
-        """Desenha a hotbar na posição ajustada para ficar totalmente visível"""
         bar_width = min(500, self.window.width * 0.8)
         bar_height = 80
         bar_x = self.window.width / 2
-        # Posição ajustada para cima para melhor visibilidade
         bar_y = 120
 
         arcade.draw_lrbt_rectangle_filled(
@@ -803,13 +737,11 @@ class QuizView(arcade.View):
         spacing = 10
         start_x = bar_x - (bar_width / 2) + slot_size / 2
 
-        # Slots numéricos (1-8) - linha superior
         for i in range(8):
             slot_x = start_x + (i * (slot_size + spacing))
             slot_id = str(i + 1)
             self._draw_hotbar_slot(slot_x, bar_y, slot_size, slot_id, is_circle=False)
 
-        # Slots letras (A-G) - linha inferior
         for i in range(7):
             slot_x = start_x + (i * (slot_size + spacing))
             slot_id = chr(65 + i)
@@ -882,8 +814,8 @@ class QuizView(arcade.View):
 
         arcade.draw_lrbt_rectangle_filled(bar_x, bar_x + bar_width, bar_y - bar_height / 2, bar_y + bar_height / 2, (50, 50, 50))
 
-        current_xp = self.xp_bar.current_xp
-        max_xp = self.xp_bar.max_xp
+        current_xp = getattr(self.xp_bar, "current_xp", 0)
+        max_xp = getattr(self.xp_bar, "max_xp", 1)
         fill_width = (current_xp / max_xp) * bar_width if max_xp > 0 else 0
 
         if fill_width > 0:
@@ -896,7 +828,7 @@ class QuizView(arcade.View):
         arcade.draw_text(f"Fase {self.phase}", self.window.width / 2, self.window.height - 100, self.COLORS["text_gold"], font_size=26, anchor_x="center", bold=True)
 
     def _draw_question_frame(self):
-        if not self.questions:
+        if not self.questions or not (0 <= self.current < len(self.questions)):
             return
         l, r, b, t = self.question_rect
         cx, cy = (l + r) / 2, (b + t) / 2
@@ -983,13 +915,13 @@ class QuizView(arcade.View):
         self.floating_texts[:] = [ft for ft in self.floating_texts if ft.update(dt)]
 
     def _use_item(self, slot_id: str, item_id: str):
-        """Usa um item da hotbar com persistência de estado"""
         if slot_id in self.used_items:
             self._show_message(f"❌ {UserInventoryManager.get_item_info(item_id)['name']} já usado nesta fase!", 2.0)
             return False
 
         item_info = UserInventoryManager.get_item_info(item_id)
 
+        # potions have mana_cost 0 in our design; items that actually *consume* mana (weapons/skills) have mana_cost > 0
         if item_info["mana_cost"] > 0 and self.mana < item_info["mana_cost"]:
             self._show_message(f"❌ Mana insuficiente! Precisa de {item_info['mana_cost']} mana", 2.0)
             return False
@@ -1002,27 +934,30 @@ class QuizView(arcade.View):
                 self.lives = min(self.max_lives, self.lives + 1)
                 success = True
                 message = "❤️ +1 Vida!"
-                self._save_user_state()  # Persistir mudança
+                self._persist_user_state()
             else:
                 message = "❌ Vida máxima!"
 
         elif item_id == "potion_mana":
+            # Poção de Mana só restaura mana — não ativa efeito.
             if self.mana < self.max_mana:
                 self.mana = min(self.max_mana, self.mana + 2)
                 success = True
                 message = "🔵 +2 Mana!"
-                self._save_user_state()  # Persistir mudança
+                self._persist_user_state()
             else:
                 message = "❌ Mana máxima!"
 
         elif item_id == "weapon_sword":
+            # weapon consumes mana and activates effect that changes XP rule when answering
             if self.mana >= item_info["mana_cost"]:
                 self.mana -= item_info["mana_cost"]
+                # This flag indicates the player used a weapon/skill, which will make correct = 10 XP
                 self.active_effects["double_xp"] = True
                 success = True
-                message = f"⚔️ XP Dobrado! (-{item_info['mana_cost']} mana)"
+                message = f"⚔️ Habilidade usada (-{item_info['mana_cost']} mana)"
                 self._show_example_for_current_question()
-                self._save_user_state()  # Persistir mudança
+                self._persist_user_state()
             else:
                 message = f"❌ {item_info['mana_cost']} mana necessários!"
 
@@ -1031,9 +966,9 @@ class QuizView(arcade.View):
                 self.mana -= item_info["mana_cost"]
                 self.active_effects["reveal_letter"] = True
                 success = True
-                message = f"🔮 Revelar Letra! (-{item_info['mana_cost']} mana)"
+                message = f"🔮 Habilidade usada (-{item_info['mana_cost']} mana)"
                 self._show_example_for_current_question()
-                self._save_user_state()  # Persistir mudança
+                self._persist_user_state()
             else:
                 message = f"❌ {item_info['mana_cost']} mana necessários!"
 
@@ -1042,9 +977,9 @@ class QuizView(arcade.View):
                 self.mana -= item_info["mana_cost"]
                 self.active_effects["remove_wrong"] = True
                 success = True
-                message = f"🧠 Remover Opção! (-{item_info['mana_cost']} mana)"
+                message = f"🧠 Habilidade usada (-{item_info['mana_cost']} mana)"
                 self._show_example_for_current_question()
-                self._save_user_state()  # Persistir mudança
+                self._persist_user_state()
             else:
                 message = f"❌ {item_info['mana_cost']} mana necessários!"
 
@@ -1053,8 +988,8 @@ class QuizView(arcade.View):
                 self.mana -= item_info["mana_cost"]
                 self.active_effects["extra_time"] = True
                 success = True
-                message = f"⏱️ Tempo Extra! (-{item_info['mana_cost']} mana)"
-                self._save_user_state()  # Persistir mudança
+                message = f"⏱️ Habilidade usada (-{item_info['mana_cost']} mana)"
+                self._persist_user_state()
             else:
                 message = f"❌ {item_info['mana_cost']} mana necessários!"
 
@@ -1117,22 +1052,27 @@ class QuizView(arcade.View):
 
         correct_answer = self.questions[self.current].get("answer")
 
-        # Verificar clique nas opções de resposta
+        # click on option
         for box in self.option_boxes:
-            l, r, b, t = box["rect"]
+            rect = box.get("rect")
+            if not rect:
+                continue
+            l, r, b, t = rect
             if l < x < r and b < y < t:
-                self._process_answer(box["text"] == correct_answer, x, y)
+                try:
+                    self._process_answer(box.get("text") == correct_answer, x, y)
+                except Exception as e:
+                    print("❌ Erro em _process_answer:", e)
                 return
 
-        # Verificar clique na hotbar
+        # hotbar numeric slots
         bar_width = min(500, self.window.width * 0.8)
         bar_x = self.window.width / 2
-        bar_y = 120  # Match draw position
+        bar_y = 120
         slot_size = min(50, bar_width / 16)
         spacing = 10
         start_x = bar_x - (bar_width / 2) + slot_size / 2
 
-        # Slots numéricos (1-8)
         for i in range(8):
             slot_x = start_x + (i * (slot_size + spacing))
             slot_id = str(i + 1)
@@ -1144,7 +1084,7 @@ class QuizView(arcade.View):
                     self._use_item(slot_id, item_id)
                 return
 
-        # Slots letras (A-G)
+        # hotbar letter slots
         for i in range(7):
             slot_x = start_x + (i * (slot_size + spacing))
             slot_id = chr(65 + i)
@@ -1159,16 +1099,29 @@ class QuizView(arcade.View):
                 return
 
     def _process_answer(self, is_correct: bool, x: float, y: float):
-        """Processa resposta com persistência de estado"""
-        xp_multiplier = 2 if self.active_effects["double_xp"] else 1
+        """
+        Nova regra de XP solicitada:
+          - Se o jogador usou qualquer habilidade/arma (qualquer efeito ativo em self.active_effects) antes de responder => acerto = 10 XP
+          - Se não usou nada => acerto = 30 XP
+        Observação: Poção de Mana apenas repõe mana e NÃO conta como efeito ativo.
+        """
+        any_effect_active = any(self.active_effects.values())
+        print(f"Resposta: {'Correta' if is_correct else 'Errada'} | Efeito ativo: {any_effect_active}")
 
         if is_correct:
-            xp_ganho = self.xp_per_correct * xp_multiplier
+            xp_ganho = self.xp_base_when_effect if any_effect_active else self.xp_base_when_no_effect
+
+            # update xp bar and server
             if self.xp_bar:
-                self.xp_bar.add_xp(xp_ganho)
+                try:
+                    self.xp_bar.add_xp(xp_ganho)
+                except Exception as e:
+                    print("⚠️ Erro ao atualizar xp_bar:", e)
             self._sync_xp_to_server(xp_ganho)
+
             self.correct_answers += 1
             self.total_xp_earned += xp_ganho
+
             self.floating_texts.append(
                 FloatingText(
                     f"★ +{xp_ganho} XP! ★",
@@ -1179,9 +1132,14 @@ class QuizView(arcade.View):
                 )
             )
             self.particle_system.create_effect(x, y, (0, 255, 100))
+
+            # After a correct answer, reset weapon/skill effects so they don't apply to next question unless reused
+            for k in list(self.active_effects.keys()):
+                self.active_effects[k] = False
         else:
             self.lives = max(0, self.lives - 1)
             self.wrong_answers += 1
+
             self.floating_texts.append(
                 FloatingText(
                     "✗ Errado! ✗",
@@ -1193,9 +1151,10 @@ class QuizView(arcade.View):
             )
             self.particle_system.create_effect(x, y, (255, 50, 50))
 
-        # Salvar estado após cada resposta
-        self._save_user_state()
+        # persist state after every answer
+        self._persist_user_state()
 
+        # next question or result
         if self.current + 1 >= len(self.questions) or self.lives <= 0:
             arcade.schedule(self._delayed_result, 1.5)
         else:
@@ -1211,6 +1170,7 @@ class QuizView(arcade.View):
             self._return_to_map()
             return
 
+        # numeric option shortcuts 1-3
         if arcade.key.KEY_1 <= key <= arcade.key.KEY_3:
             option_index = key - arcade.key.KEY_1
             if 0 <= option_index < len(self.option_boxes):
@@ -1220,6 +1180,7 @@ class QuizView(arcade.View):
                 self.on_mouse_press(cx, cy, arcade.MOUSE_BUTTON_LEFT, modifiers)
             return
 
+        # letter option shortcuts A-C
         if arcade.key.A <= key <= arcade.key.C:
             option_index = key - arcade.key.A
             if 0 <= option_index < len(self.option_boxes):
@@ -1237,7 +1198,7 @@ class QuizView(arcade.View):
                     self.on_mouse_press(cx, cy, arcade.MOUSE_BUTTON_LEFT, modifiers)
                     break
 
-        # Teclas para usar itens da hotbar
+        # hotbar keys 1-8
         if arcade.key.KEY_1 <= key <= arcade.key.KEY_8:
             slot_id = str(key - arcade.key.KEY_1 + 1)
             item_id = self.hotbar_slots.get(slot_id)
@@ -1245,6 +1206,7 @@ class QuizView(arcade.View):
                 self._use_item(slot_id, item_id)
             return
 
+        # hotbar keys A-G
         if arcade.key.A <= key <= arcade.key.G:
             slot_id = chr(key)
             item_id = self.hotbar_slots.get(slot_id)
@@ -1260,3 +1222,29 @@ class QuizView(arcade.View):
         self.window.set_viewport(0, width, 0, height)
         if self.questions:
             self._build_option_boxes()
+
+    # helpers for persistence
+    def _persist_user_state(self):
+        try:
+            user = user_manager.get_current_user()
+            if not user:
+                return
+            user_data = auth_system.get_user_data(user) or {}
+            user_data["lives"] = self.lives
+            user_data["max_lives"] = self.max_lives
+            user_data["mana"] = self.mana
+            user_data["max_mana"] = self.max_mana
+            user_data["hotbar"] = {s: i for s, i in self.hotbar_slots.items() if i}
+            user_data["used_items_phase"] = list(self.used_items)
+            user_data["active_effects"] = {k: bool(v) for k, v in self.active_effects.items()}
+            user_data.setdefault("session_stats", {})
+            user_data["session_stats"].update({
+                "last_phase": self.phase,
+                "correct_answers_session": self.correct_answers,
+                "wrong_answers_session": self.wrong_answers,
+                "total_xp_earned_session": self.total_xp_earned,
+                "timestamp": time.time()
+            })
+            auth_system.update_user_data(user, user_data)
+        except Exception as e:
+            print("❌ Falha ao persistir estado do usuário:", e)

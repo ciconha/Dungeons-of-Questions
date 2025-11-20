@@ -1,0 +1,75 @@
+{
+  "nome": "mariana",
+  "password": "123456",
+  "avatar_path": null,
+  "avatar_url": "/home/miller/Documentos/Projetos Curriculo/rpg/jogo/game/assets/avatars/png-transparent-the-seven-deadly-sins-meliodas-sloth-nanatsu-no-taizai-manga-fictional-character-angel-thumbnail.png",
+  "xp": 30,
+  "level": 2,
+  "max_xp": 100,
+  "coins": 100,
+  "inventory": {
+    "skill_focus": 1
+  },
+  "equipped_items": {},
+  "display_name": "mariana",
+  "achievements": [],
+  "play_time": 0,
+  "quizzes_completed": 0,
+  "correct_answers": 0,
+  "total_answers": 0,
+  "hotbar": {
+    "1": "skill_focus"
+  },
+  "quiz_state": {
+    "current_lives": 4,
+    "max_lives": 4,
+    "current_mana": 5,
+    "max_mana": 5,
+    "current_phase": 1,
+    "active_effects": {},
+    "used_items": [],
+    "correct_answers_session": 0,
+    "wrong_answers_session": 0,
+    "total_xp_earned_session": 0,
+    "last_save": "2025-11-17T09:31:45.743930"
+  },
+  "quiz_progress": {
+    "phase_1": {
+      "correct_answers": 3,
+      "wrong_answers": 0,
+      "total_xp": 30,
+      "timestamp": 1763383063.8943508
+    }
+  },
+  "item_usage": {},
+  "session_stats": {},
+  "created_at": "2025-11-17T09:31:45.743863",
+  "last_login": "2025-11-17T09:31:45.743904",
+  "character": {
+    "name": "Emily",
+    "animations": {
+      "up": "assets/characters/Emillywhite_down.png",
+      "down": "assets/characters/Emillywhite_front.png",
+      "left": "assets/characters/Emillywhite_left.png",
+      "right": "assets/characters/Emillywhite_right.png"
+    },
+    "position": {
+      "x": 462.29022203996794,
+      "y": 200.15546985993205
+    }
+  },
+  "campaign_progress": {
+    "fase_atual": 2,
+    "fases": {
+      "1": "concluida",
+      "2": "liberada",
+      "3": "bloqueada",
+      "4": "bloqueada",
+      "5": "bloqueada",
+      "6": "bloqueada"
+    },
+    "fases_concluidas": [
+      1
+    ]
+  }
+}

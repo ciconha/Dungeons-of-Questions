@@ -4,12 +4,12 @@
     "password": "123456",
     "avatar_path": null,
     "avatar_url": "/home/miller/Documentos/Projetos Curriculo/rpg/jogo/game/assets/avatars/png-transparent-meliodas-the-seven-deadly-sins-infant-child-nanatsu-no-taizai-child-english-manga-thumbnail.png",
-    "xp": 90,
-    "level": 1,
+    "xp": 170,
+    "level": 2,
     "max_xp": 100,
-    "coins": 100,
+    "coins": 130,
     "inventory": {
-      "potion_mana": 1,
+      "potion_mana": 3,
       "weapon_sword": 2
     },
     "equipped_items": {},
@@ -22,6 +22,8 @@
     "hotbar": {
       "1": "weapon_sword",
       "2": "weapon_staff",
+      "3": "potion_mana",
+      "4": "potion_mana",
       "A": "potion_health",
       "B": "potion_mana",
       "C": "skill_focus"
@@ -40,26 +42,31 @@
       }
     },
     "campaign_progress": {
-      "fase_atual": 3,
+      "fase_atual": 2,
       "fases": {
         "1": "liberada",
         "2": "liberada",
-        "3": "liberada",
+        "3": "bloqueada",
+        "4": "bloqueada",
+        "5": "bloqueada",
+        "6": "bloqueada",
+        "1": "liberada",
+        "2": "liberada",
+        "3": "bloqueada",
         "4": "bloqueada",
         "5": "bloqueada",
         "6": "bloqueada"
       },
       "fases_concluidas": [
-        1,
-        2
+        1
       ]
     },
     "last_login": "2025-11-14T21:56:48.871440",
     "created_at": "2025-11-14T21:56:48.871446",
     "item_usage": {
-      "weapon_sword": 10,
-      "weapon_staff": 16,
-      "potion_mana": 2,
+      "weapon_sword": 11,
+      "weapon_staff": 27,
+      "potion_mana": 15,
       "skill_focus": 1
     },
     "quiz_state": {
@@ -77,41 +84,43 @@
       "wrong_answers_session": 0,
       "total_xp_earned_session": 0
     },
-    "lives": 4,
+    "lives": 1,
     "max_lives": 4,
-    "mana": 1,
+    "mana": 3,
     "max_mana": 5,
     "used_items_phase": [
-      "2"
+      "B"
     ],
     "active_effects": {
       "double_xp": false,
-      "reveal_letter": true,
+      "reveal_letter": false,
       "remove_wrong": false,
       "extra_time": false
     },
     "session_stats": {
-      "last_phase": 1,
-      "correct_answers_session": 0,
+      "last_phase": 2,
+      "correct_answers_session": 2,
       "wrong_answers_session": 0,
-      "total_xp_earned_session": 0,
-      "timestamp": 1763174561.599333
+      "total_xp_earned_session": 60,
+      "timestamp": 1763386468.2516618
     },
     "quiz_progress": {
       "phase_1": {
-        "correct_answers": 0,
+        "completed": true,
+        "correct_answers": 3,
         "wrong_answers": 0,
-        "total_xp": 0,
-        "timestamp": 1763220993.2465482
+        "total_xp": 70,
+        "timestamp": 1763386449.8688328
       },
       "phase_2": {
+        "completed": false,
         "correct_answers": 0,
-        "wrong_answers": 0,
+        "wrong_answers": 3,
         "total_xp": 0,
-        "timestamp": 1763220998.2631853
+        "timestamp": 1763386460.2131152
       }
     },
-    "max_phase": 1
+    "max_phase": 2
   },
   "eduardo": {
     "nome": "edu",
@@ -193,6 +202,165 @@
         "5": "bloqueada",
         "6": "bloqueada"
       }
+    }
+  },
+  "gui": {
+    "nome": "guilherme",
+    "password": "123456",
+    "avatar_path": null,
+    "avatar_url": "/home/miller/Documentos/Projetos Curriculo/rpg/jogo/game/assets/avatars/png-transparent-meliodas-the-seven-deadly-sins-infant-child-nanatsu-no-taizai-child-english-manga-thumbnail.png",
+    "xp": 100,
+    "level": 1,
+    "max_xp": 100,
+    "coins": 100,
+    "inventory": {
+      "skill_focus": 1,
+      "weapon_sword": 1
+    },
+    "equipped_items": {},
+    "display_name": "guilherme",
+    "achievements": [],
+    "play_time": 0,
+    "quizzes_completed": 0,
+    "correct_answers": 0,
+    "total_answers": 0,
+    "hotbar": {
+      "1": "skill_focus",
+      "2": "weapon_sword"
+    },
+    "quiz_state": {
+      "current_lives": 4,
+      "max_lives": 4,
+      "current_mana": 5,
+      "max_mana": 5,
+      "current_phase": 1,
+      "active_effects": {},
+      "used_items": [],
+      "correct_answers_session": 0,
+      "wrong_answers_session": 0,
+      "total_xp_earned_session": 0,
+      "last_save": "2025-11-17T09:02:37.747956"
+    },
+    "quiz_progress": {
+      "phase_1": {
+        "correct_answers": 3,
+        "wrong_answers": 0,
+        "total_xp": 30,
+        "timestamp": 1763381398.5172403
+      },
+      "phase_2": {
+        "correct_answers": 3,
+        "wrong_answers": 0,
+        "total_xp": 60,
+        "timestamp": 1763381859.5916507
+      }
+    },
+    "item_usage": {
+      "weapon_sword": 1
+    },
+    "session_stats": {},
+    "created_at": "2025-11-17T09:02:37.747908",
+    "last_login": "2025-11-17T09:02:37.747938",
+    "character": {
+      "name": "Emily",
+      "animations": {
+        "up": "assets/characters/Emillywhite_down.png",
+        "down": "assets/characters/Emillywhite_front.png",
+        "left": "assets/characters/Emillywhite_left.png",
+        "right": "assets/characters/Emillywhite_right.png"
+      },
+      "position": {
+        "x": 64,
+        "y": 64
+      }
+    },
+    "campaign_progress": {
+      "fase_atual": 1,
+      "fases_concluidas": [
+        1,
+        2
+      ],
+      "fases": {
+        "1": "liberada",
+        "2": "concluida",
+        "3": "liberada",
+        "4": "bloqueada",
+        "5": "bloqueada",
+        "6": "bloqueada"
+      }
+    }
+  },
+  "mari": {
+    "nome": "mariana",
+    "password": "123456",
+    "avatar_path": null,
+    "avatar_url": "/home/miller/Documentos/Projetos Curriculo/rpg/jogo/game/assets/avatars/png-transparent-the-seven-deadly-sins-meliodas-sloth-nanatsu-no-taizai-manga-fictional-character-angel-thumbnail.png",
+    "xp": 30,
+    "level": 1,
+    "max_xp": 100,
+    "coins": 100,
+    "inventory": {
+      "skill_focus": 1
+    },
+    "equipped_items": {},
+    "display_name": "mariana",
+    "achievements": [],
+    "play_time": 0,
+    "quizzes_completed": 0,
+    "correct_answers": 0,
+    "total_answers": 0,
+    "hotbar": {
+      "1": "skill_focus"
+    },
+    "quiz_state": {
+      "current_lives": 4,
+      "max_lives": 4,
+      "current_mana": 5,
+      "max_mana": 5,
+      "current_phase": 1,
+      "active_effects": {},
+      "used_items": [],
+      "correct_answers_session": 0,
+      "wrong_answers_session": 0,
+      "total_xp_earned_session": 0,
+      "last_save": "2025-11-17T09:31:45.743930"
+    },
+    "quiz_progress": {
+      "phase_1": {
+        "correct_answers": 3,
+        "wrong_answers": 0,
+        "total_xp": 30,
+        "timestamp": 1763383063.8943508
+      }
+    },
+    "item_usage": {},
+    "session_stats": {},
+    "created_at": "2025-11-17T09:31:45.743863",
+    "last_login": "2025-11-17T09:31:45.743904",
+    "character": {
+      "name": "Emily",
+      "animations": {
+        "up": "assets/characters/Emillywhite_down.png",
+        "down": "assets/characters/Emillywhite_front.png",
+        "left": "assets/characters/Emillywhite_left.png",
+        "right": "assets/characters/Emillywhite_right.png"
+      },
+      "position": {
+        "x": 64,
+        "y": 64
+      }
+    },
+    "campaign_progress": {
+      "fase_atual": 1,
+      "fases": {
+        "1": "liberada",
+        "2": "bloqueada",
+        "3": "bloqueada",
+        "4": "bloqueada",
+        "5": "bloqueada",
+        "6": "bloqueada"
+      },
+      "fases_concluidas": []
     }
   }
 }

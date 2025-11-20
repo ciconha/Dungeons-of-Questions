@@ -1,0 +1,86 @@
+{
+  "nome": "guilherme",
+  "password": "123456",
+  "avatar_path": null,
+  "avatar_url": "/home/miller/Documentos/Projetos Curriculo/rpg/jogo/game/assets/avatars/png-transparent-meliodas-the-seven-deadly-sins-infant-child-nanatsu-no-taizai-child-english-manga-thumbnail.png",
+  "xp": 100,
+  "level": 1,
+  "max_xp": 100,
+  "coins": 100,
+  "inventory": {
+    "skill_focus": 1,
+    "weapon_sword": 1
+  },
+  "equipped_items": {},
+  "display_name": "guilherme",
+  "achievements": [],
+  "play_time": 0,
+  "quizzes_completed": 0,
+  "correct_answers": 0,
+  "total_answers": 0,
+  "hotbar": {
+    "1": "skill_focus",
+    "2": "weapon_sword"
+  },
+  "quiz_state": {
+    "current_lives": 4,
+    "max_lives": 4,
+    "current_mana": 5,
+    "max_mana": 5,
+    "current_phase": 1,
+    "active_effects": {},
+    "used_items": [],
+    "correct_answers_session": 0,
+    "wrong_answers_session": 0,
+    "total_xp_earned_session": 0,
+    "last_save": "2025-11-17T09:02:37.747956"
+  },
+  "quiz_progress": {
+    "phase_1": {
+      "correct_answers": 3,
+      "wrong_answers": 0,
+      "total_xp": 30,
+      "timestamp": 1763381398.5172403
+    },
+    "phase_2": {
+      "correct_answers": 3,
+      "wrong_answers": 0,
+      "total_xp": 60,
+      "timestamp": 1763381859.5916507
+    }
+  },
+  "item_usage": {
+    "weapon_sword": 1
+  },
+  "session_stats": {},
+  "created_at": "2025-11-17T09:02:37.747908",
+  "last_login": "2025-11-17T09:02:37.747938",
+  "character": {
+    "name": "Emily",
+    "animations": {
+      "up": "assets/characters/Emillywhite_down.png",
+      "down": "assets/characters/Emillywhite_front.png",
+      "left": "assets/characters/Emillywhite_left.png",
+      "right": "assets/characters/Emillywhite_right.png"
+    },
+    "position": {
+      "x": 824.2721063131155,
+      "y": 208.60873990915226
+    }
+  },
+  "campaign_progress": {
+    "fase_atual": 3,
+    "fases": {
+      "1": "liberada",
+      "2": "concluida",
+      "3": "liberada",
+      "4": "bloqueada",
+      "5": "bloqueada",
+      "6": "bloqueada"
+    },
+    "fases_concluidas": [
+      1,
+      2
+    ]
+  }
+}
