@@ -275,7 +275,6 @@ python main.py
 | **Autenticação Segura** | ✅ | JWT + MongoDB | `PyJWT` + `Motor` |
 | **Progresso em Nuvem** | ✅ | Salvamento automático | `MongoDB` |
 | **Personalização** | ✅ | Avatares e estatísticas | `Arcade Sprites` |
-| **Multiplayer** | ✅ | Integração Discord | `Discord API` |
 | **Backup** | ✅ | Fallback local/cloud | `JSON` + `MongoDB` |
 
 ### 🎨 Sistema de Interface
@@ -308,7 +307,7 @@ python main.py
    - Dificuldade progressiva por fase
 
 3. **⭐ Sistema de Recompensas**
-   - +10 XP por resposta correta
+   - +30 XP por resposta correta
    - Bônus por sequências corretas
    - Level Up a cada 100 XP
 
