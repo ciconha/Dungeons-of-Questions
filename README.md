@@ -76,7 +76,7 @@ O jogo ajuda porque cada pergunta vem com um **exemplo ilustrativo** que conecta
 ---
 
 ## 5. Critérios de Pontuação
-- Cada resposta correta dá **10 XP** (ou **20 XP** quando ativa o exemplo e acerta).  
+- Cada resposta correta dá **30 XP** (ou **10 XP** quando ativa o exemplo e acerta).  
 - Passa de fase se tiver **3 acertos ou mais**.  
 - Ganha **moedas extras** ao completar a fase.  
 
