@@ -11,12 +11,100 @@
 ![Arcade](https://img.shields.io/badge/Arcade_Engine-FF6B6B?style=for-the-badge&logo=arcade)
 ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
 
-**Uma jornada épica através do conhecimento! Explore masmorras, resolva desafios e aprenda conceitos de Ciência da Computação em um RPG.**
-
 ---
 
 ### [link do video](https://acadcruzeirodosul-my.sharepoint.com/:v:/g/personal/eduardo_ciconha_cs_brazcubas_edu_br/EVbVybnhDjdLrIjWltZ0AzgBNc-d_fRXg_lCE238KxePdA?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=WfKeWk)
 
+---
+
+<table>
+  <tr>
+    <td style="vertical-align: top; padding: 10px;">
+      <details>
+        <summary><strong>relatorio_pedagógico.md</strong></summary>
+         <p>
+            <br>
+              📘 Relatório Pedagógico do Plugin Gamificado
+
+## 1. Identificação do Plugin
+- **Nome do jogo:** Dungeons of Questions  
+- **Plugin:** Arcade  
+
+### Área da disciplina
+O jogo se encaixa nas áreas de **Fundamentos de Computação, Análise de Algoritmos e Modelos Computacionais**.  
+Ele não só aborda conceitos básicos de computabilidade, complexidade e lógica de algoritmos, mas também transforma esses conteúdos em desafios práticos dentro do jogo.  
+Assim, o aluno consegue **experimentar a teoria de forma interativa**, vendo como ideias como máquinas de Turing, problemas decidíveis e análise de desempenho aparecem em situações de jogo e ajudam a avançar de fase.
+
+### Grupo
+- **Grupo 2**  
+- **Integrantes:**  
+- Eduardo Ciconha | RGM: 33352844  
+- Guilherme Ribeiro | RGM: 33860858  
+- Mariana de Sousa | RGM: 34030701  
+
+---
+
+## 2. Objetivo Pedagógico
+O jogo ajuda o aluno a praticar conceitos de **computação teórica** como:
+- Máquinas de Turing  
+- Problemas decidíveis e indecidíveis  
+- Notação assintótica  
+- P vs NP  
+
+Ao jogar, o aluno aprende de forma prática, respondendo perguntas e usando itens que dão dicas, o que reforça o conteúdo da disciplina.
+
+---
+
+## 3. Descrição do Jogo
+- O jogador entra em uma fase com perguntas de múltipla escolha.  
+- Ele tem **vidas e mana**: errar tira vidas, usar habilidades consome mana.  
+- Acertar dá **XP e moedas**, que podem ser usadas para comprar itens na loja.  
+- Se acertar pelo menos **3 perguntas**, passa de fase.  
+- O feedback vem em forma de mensagens na tela (acerto, erro, dicas, exemplos ilustrativos) e no resultado final (XP, moedas, aprovação ou reprovação da fase).  
+
+---
+
+## 4. Conteúdo Relacionado à Disciplina
+Os tópicos do plano de ensino que aparecem no jogo são:
+- **Máquinas de Turing** (explicação e exemplos)  
+- **Problema da Parada** (decidível)  
+- **Classes P e NP** (diferença entre resolver e verificar)  
+- **Notação Big-O** (complexidade de algoritmos)  
+
+O jogo ajuda porque cada pergunta vem com um **exemplo ilustrativo** que conecta a teoria com situações práticas, facilitando a compreensão.
+
+---
+
+## 5. Critérios de Pontuação
+- Cada resposta correta dá **10 XP** (ou **20 XP** quando ativa o exemplo e acerta).  
+- Passa de fase se tiver **3 acertos ou mais**.  
+- Ganha **moedas extras** ao completar a fase.  
+
+### Penalidades
+- Errar tira vidas.  
+- Usar habilidades consome mana.  
+- Se perder todas as vidas, a fase é reprovada.  
+
+---
+
+## 6. Testes Realizados
+Casos de teste planejados:
+- Jogador acerta todas as perguntas → deve ganhar XP máximo e moedas.  
+- Jogador erra todas → perde todas as vidas e reprova a fase.  
+- Jogador usa habilidades sem mana → deve aparecer mensagem de erro.  
+- Jogador repete a fase com o mesmo seed → perguntas devem ser consistentes.  
+- Jogador acerta 3 → passa de fase.  
+
+---
+
+## 7. Roteiro de Demonstração
+- **Cenário feliz:** mostrar o jogo rodando, o aluno respondendo corretamente, usando uma habilidade (exemplo aparece), passando de fase e recebendo XP e moedas.  
+- **Cenário de erro:** mostrar o aluno errando várias vezes, perdendo vidas, usando habilidade sem mana (mensagem de erro aparece), e no final reprovando a fase.  
+
+  </p>
+      </details>
+    </td>
+</table>
 
 
 </div>
@@ -31,9 +119,7 @@ Proporcionar uma experiência interativa de aprendizado dos conceitos e funciona
 - 🧠 **Aprendizado Progressivo**: Conceitos de computação de forma gradual e divertida
 - 🎪 **Sistema de XP Avançado**: Evolua seu personagem com conhecimento
 - 👥 **Perfil Personalizado RPG**: Interface estilo medieval
-- 🎨 **Pixel Art Profissional**: Visual retro encantador
-- 🌐 **Multiplayer Integrado**: Conecte com amigos via Discord
-- 💾 **Sistema de Salvamento**: MongoDB + Autenticação segura
+- 💾 **Sistema de Salvamento**: MongoDB + Autenticação 
 
 ## 🛠️ Stack Tecnológica Completa
 
@@ -55,8 +141,8 @@ Proporcionar uma experiência interativa de aprendizado dos conceitos e funciona
 
 ```
 Dungeons-of-Questions/
-├── 🎮 game/                          # Cliente Principal do Jogo
-│   ├── 🗺️ assets/                    # Recursos Visuais
+├── 🎮 game/                          
+│   ├── 🗺️ assets/                 
 │   │   ├── characters/              # Sprites dos Personagens
 │   │   │   ├── Emillywhite_front.png
 │   │   │   ├── Emillywhite_back.png
@@ -107,8 +193,6 @@ Dungeons-of-Questions/
 │   ├── api/                       # Documentação da API
 │   └── setup/                     # Guias de Instalação
 ├── 📋 requirements.txt            # Dependências Python
-├── 🐳 docker-compose.yml          # Orquestração Docker
-├── 🔧 .env.example                # Variáveis de Ambiente
 └── 📄 README.md                   # Este Arquivo
 ```
 
@@ -131,12 +215,8 @@ source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# 5. Configure variáveis de ambiente
-cp .env.example .env
-# Edite .env com suas configurações
-
-# 6. Execute o jogo
-python game/main.py
+# 5. Execute o jogo
+python main.py
 ```
 
 ### 🪟 Windows 10/11
@@ -153,12 +233,8 @@ venv\Scripts\activate
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# 4. Configuração
-copy .env.example .env
-# Edite o arquivo .env com suas configurações
-
-# 5. Executar o jogo
-python game/main.py
+# 4. Executar o jogo
+python main.py
 ```
 
 ### 🍎 macOS
@@ -178,24 +254,20 @@ source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# 5. Configuração
-cp .env.example .env
-# Configure o .env
-
-# 6. Executar
-python game/main.py
+# 5. Executar
+python main.py
 ```
 
 ## 🎯 Funcionalidades Detalhadas
 
 ### 🏰 Sistema Principal de Jogo
-| Funcionalidade | Status | Descrição | Imagem |
-|----------------|--------|-----------|--------|
-| **Mundo Aberto 2D** | ✅ | Exploração livre em mapa TMX | ![Mapa](https://via.placeholder.com/50/27AE60/FFFFFF?text=🗺️) |
-| **Sistema de Quiz** | ✅ | 6 fases progressivas sobre Turing | ![Quiz](https://via.placeholder.com/50/2980B9/FFFFFF?text=🧠) |
-| **Progressão de XP** | ✅ | Sistema infinito de levels | ![XP](https://via.placeholder.com/50/F39C12/FFFFFF?text=⭐) |
-| **Perfil RPG** | ✅ | Interface medieval personalizável | ![Perfil](https://via.placeholder.com/50/E74C3C/FFFFFF?text=👤) |
-| **Sistema de Fases** | ✅ | Desafios temáticos progressivos | ![Fases](https://via.placeholder.com/50/9B59B6/FFFFFF?text=🎯) |
+| Funcionalidade | Status | Descrição |
+|----------------|--------|-----------|
+| **Mundo Aberto 2D** | ✅ | Exploração livre em mapa TMX |
+| **Sistema de Quiz** | ✅ | 6 fases progressivas sobre Turing | 
+| **Progressão de XP** | ✅ | Sistema infinito de levels | 
+| **Perfil RPG** | ✅ | Interface medieval personalizável | 
+| **Sistema de Fases** | ✅ | Desafios temáticos progressivos  |
 
 ### 👤 Sistema Avançado de Usuário
 | Módulo | Status | Características | Tecnologia |
@@ -207,24 +279,23 @@ python game/main.py
 | **Backup** | ✅ | Fallback local/cloud | `JSON` + `MongoDB` |
 
 ### 🎨 Sistema de Interface
-| Componente | Status | Detalhes | Preview |
-|------------|--------|----------|---------|
-| **Menu Principal** | ✅ | Navegação estilo RPG | ![Menu](https://via.placeholder.com/30/8E44AD/FFFFFF?text=🎪) |
-| **HUD In-Game** | ✅ | Informações em tempo real | ![HUD](https://via.placeholder.com/30/27AE60/FFFFFF?text=📊) |
-| **Perfil Medieval** | ✅ | Design único RPG | ![Perfil](https://via.placeholder.com/30/E67E22/FFFFFF?text=🏰) |
-| **Animações** | ✅ | Transições suaves | ![Anim](https://via.placeholder.com/30/3498DB/FFFFFF?text=✨) |
+| Componente | Status | Detalhes |
+|------------|--------|----------|
+| **Menu Principal** | ✅ | Navegação estilo RPG | 
+| **HUD In-Game** | ✅ | Informações em tempo real |
+| **Animações** | ✅ | Transições suaves | 
 
 ## 🕹️ Como Jogar - Guia Completo
 
 ### 🎮 Controles e Navegação
-| Ação | Tecla | Descrição | Ícone |
-|------|-------|-----------|--------|
-| **Movimento** | `WASD` | Navegação fluída pelo mapa | 🎮 |
-| **Interagir** | `ENTER` | Iniciar desafios e quizzes | ⚡ |
-| **Menu** | `ESC` | Voltar/Configurações | ⚙️ |
-| **Perfil** | `P` | Acessar perfil do jogador | 👤 |
-| **Multiplayer** | `M` | Acessar sistema multiplayer | 👥 |
-| **Tela Cheia** | `F11` | Alternar tela cheia | 🖥️ |
+| Ação | Tecla | Descrição |
+|------|-------|-----------|
+| **Movimento** | `WASD` | Navegação fluída pelo mapa | 
+| **Interagir** | `ENTER` | Iniciar desafios e quizzes | 
+| **Menu** | `ESC` | Voltar/Configurações | 
+| **Perfil** | `P` | Acessar perfil do jogador |
+| **Multiplayer** | `M` | Acessar sistema multiplayer |
+| **Tela Cheia** | `F11` | Alternar tela cheia |
 
 ### 📚 Sistema de Progressão
 1. **🎯 Explore o Mapa**
@@ -237,25 +308,19 @@ python game/main.py
    - Dificuldade progressiva por fase
 
 3. **⭐ Sistema de Recompensas**
-   - +100 XP por resposta correta
+   - +10 XP por resposta correta
    - Bônus por sequências corretas
-   - Level Up a cada 1000 XP
+   - Level Up a cada 100 XP
 
 4. **📈 Evolução do Personagem**
    - Desbloqueie novas áreas
    - Acesse fases mais avançadas
-   - Melhore suas estatísticas
 
-5. **🏆 Conquistas**
-   - Complete todas as 6 fases
-   - Domine os conceitos de Turing
-   - Torne-se um Mestre do Conhecimento!
-
-## 👥 Equipe de Desenvolvimento
+## 👥 Equipe 
 
 <div align="center">
 
-### 🎮 Desenvolvedores Principais
+### 🎮 Desenvolvedores 
 
 <table>
   <tr>
@@ -508,32 +573,17 @@ deste software e arquivos de documentação associados...
     </td>
 </table>
 
+```
+Caso querira algo mais pratico para instalar as dependencias
 
-### Caso queira algo mais simples para jogar o Jogo, nos convidamos você a entrar nas branch e escolher seu Sistema Operacional, pois assim você abaixa em arquivo .ZIP é inicia o jogo.
+cd verificação
+
+python instalador.py
+
+para instalar todos os pacotes
+
+python verificacao.py
+
+para verificar se todos os pacotes foram instlados
 
 ```
--Linux
-
-Abaixa a branch Linux é vai até start.sh e clica no botão direito e vai até iniciar software
-
-```
-
-
-```
--Windows
-
-Abaixa a branch Windows e vai até a pasta DIST e clica em main, nisso vai inicar o jogo 
-
-```
-
-## ✨ Recursos Incluídos:
-
-- **🎯 Badges interativas** e profissionais
-- **📊 Arquitetura completa** com estrutura de diretórios
-- **🎮 Guias de instalação** para Windows, Linux, macOS e Docker
-- **👥 Equipe com fotos** e badges de contribuição
-- **🐛 Troubleshooting** para erros comuns
-- **📈 Roadmap visual** detalhado
-- **🤝 Guia de contribuição** com padrões
-- **🎨 Design responsivo** e acessível
-- **📞 Canais de suporte** múltiplos
